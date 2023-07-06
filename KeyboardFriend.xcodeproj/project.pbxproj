@@ -7,19 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		35B11A3E2A574F2B00C22C74 /* KeyboardFriendApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A3D2A574F2B00C22C74 /* KeyboardFriendApp.swift */; };
-		35B11A402A574F2B00C22C74 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A3F2A574F2B00C22C74 /* ContentView.swift */; };
 		35B11A422A574F2B00C22C74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35B11A412A574F2B00C22C74 /* Assets.xcassets */; };
 		35B11A452A574F2B00C22C74 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35B11A442A574F2B00C22C74 /* Preview Assets.xcassets */; };
+		35B11A542A574F7700C22C74 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A4C2A574F7600C22C74 /* SettingsView.swift */; };
+		35B11A552A574F7700C22C74 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A4D2A574F7600C22C74 /* KeyboardView.swift */; };
+		35B11A562A574F7700C22C74 /* QMKInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A4E2A574F7600C22C74 /* QMKInfo.swift */; };
+		35B11A572A574F7700C22C74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35B11A4F2A574F7600C22C74 /* Assets.xcassets */; };
+		35B11A582A574F7700C22C74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A502A574F7700C22C74 /* AppDelegate.swift */; };
+		35B11A592A574F7700C22C74 /* KeyboardFriendApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A512A574F7700C22C74 /* KeyboardFriendApp.swift */; };
+		35B11A5A2A574F7700C22C74 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A522A574F7700C22C74 /* FloatingPanel.swift */; };
+		35B11A5B2A574F7700C22C74 /* QMKInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A532A574F7700C22C74 /* QMKInfoService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		35B11A3A2A574F2B00C22C74 /* KeyboardFriend.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeyboardFriend.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		35B11A3D2A574F2B00C22C74 /* KeyboardFriendApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardFriendApp.swift; sourceTree = "<group>"; };
-		35B11A3F2A574F2B00C22C74 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		35B11A412A574F2B00C22C74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35B11A442A574F2B00C22C74 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		35B11A462A574F2B00C22C74 /* KeyboardFriend.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KeyboardFriend.entitlements; sourceTree = "<group>"; };
+		35B11A4C2A574F7600C22C74 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		35B11A4D2A574F7600C22C74 /* KeyboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
+		35B11A4E2A574F7600C22C74 /* QMKInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QMKInfo.swift; sourceTree = "<group>"; };
+		35B11A4F2A574F7600C22C74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
+		35B11A502A574F7700C22C74 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		35B11A512A574F7700C22C74 /* KeyboardFriendApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardFriendApp.swift; sourceTree = "<group>"; };
+		35B11A522A574F7700C22C74 /* FloatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
+		35B11A532A574F7700C22C74 /* QMKInfoService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QMKInfoService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,8 +64,14 @@
 		35B11A3C2A574F2B00C22C74 /* KeyboardFriend */ = {
 			isa = PBXGroup;
 			children = (
-				35B11A3D2A574F2B00C22C74 /* KeyboardFriendApp.swift */,
-				35B11A3F2A574F2B00C22C74 /* ContentView.swift */,
+				35B11A502A574F7700C22C74 /* AppDelegate.swift */,
+				35B11A4F2A574F7600C22C74 /* Assets.xcassets */,
+				35B11A522A574F7700C22C74 /* FloatingPanel.swift */,
+				35B11A512A574F7700C22C74 /* KeyboardFriendApp.swift */,
+				35B11A4D2A574F7600C22C74 /* KeyboardView.swift */,
+				35B11A4E2A574F7600C22C74 /* QMKInfo.swift */,
+				35B11A532A574F7700C22C74 /* QMKInfoService.swift */,
+				35B11A4C2A574F7600C22C74 /* SettingsView.swift */,
 				35B11A412A574F2B00C22C74 /* Assets.xcassets */,
 				35B11A462A574F2B00C22C74 /* KeyboardFriend.entitlements */,
 				35B11A432A574F2B00C22C74 /* Preview Content */,
@@ -128,6 +146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35B11A452A574F2B00C22C74 /* Preview Assets.xcassets in Resources */,
+				35B11A572A574F7700C22C74 /* Assets.xcassets in Resources */,
 				35B11A422A574F2B00C22C74 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,8 +158,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35B11A402A574F2B00C22C74 /* ContentView.swift in Sources */,
-				35B11A3E2A574F2B00C22C74 /* KeyboardFriendApp.swift in Sources */,
+				35B11A582A574F7700C22C74 /* AppDelegate.swift in Sources */,
+				35B11A592A574F7700C22C74 /* KeyboardFriendApp.swift in Sources */,
+				35B11A5A2A574F7700C22C74 /* FloatingPanel.swift in Sources */,
+				35B11A542A574F7700C22C74 /* SettingsView.swift in Sources */,
+				35B11A552A574F7700C22C74 /* KeyboardView.swift in Sources */,
+				35B11A5B2A574F7700C22C74 /* QMKInfoService.swift in Sources */,
+				35B11A562A574F7700C22C74 /* QMKInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
