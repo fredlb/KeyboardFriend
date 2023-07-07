@@ -48,20 +48,25 @@ struct SettingsView: View {
                     self.layoutSelection = $0.first ?? ""
                 }
                 .frame(maxWidth: 200)
+                .disabled(qmkInfoService.qmkInfo == nil)
                 .pickerStyle(MenuPickerStyle())
             }
             Divider()
             VStack {
-                TabView {
-                    ForEach(qmkInfoService.currentDrawLayout.layers.sorted(by: {$0.key < $1.key}), id: \.key) {
-                        layerName, layer in
-                        VStack {
-                            KeyboardView(maxWidth: qmkInfoService.currentDrawLayout.keyboardWidth, maxHeight: qmkInfoService.currentDrawLayout.keyboardHeigt, layer: layer)
+                if qmkInfoService.qmkInfo == nil {
+                    Text("Load a keymap file to get started")
+                } else {
+                    TabView {
+                        ForEach(qmkInfoService.currentDrawLayout.layers.sorted(by: {$0.key < $1.key}), id: \.key) {
+                            layerName, layer in
+                            VStack {
+                                KeyboardView(maxWidth: qmkInfoService.currentDrawLayout.keyboardWidth, maxHeight: qmkInfoService.currentDrawLayout.keyboardHeigt, layer: layer)
+                            }
+                            .tabItem{Text("Layer \(layerName)")}
                         }
-                        .tabItem{Text("Layer \(layerName)")}
                     }
                 }
-            }
+            }.frame(maxHeight: .infinity)
         }.padding()
     }
     
