@@ -14,4 +14,7 @@ Holding down that hotkey will display an overlay, that does not steal focus, of 
   <img src="settings.png">
 </p>
 
+<p align="center">
+  <img src="overlay.png">
+</p>
 ## This is yanky alpha software and I'm not a Swift programmer! Contributions and lolz are welcome!
