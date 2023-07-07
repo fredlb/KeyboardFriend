@@ -1,5 +1,6 @@
 # KeyboardFriend
-### A tool to help you find your way around your new keyboard's many layers
+## A tool to help you find your way around your new keyboard's many layers
+##### 🚧 This is yanky alpha software! 🚧
 
 <p align="center">
   <img width=300 src="icon.png">
@@ -17,4 +18,4 @@ Holding down that hotkey will display an overlay, that does not steal focus, of 
 <p align="center">
   <img src="overlay.png">
 </p>
-## This is yanky alpha software and I'm not a Swift programmer! Contributions and lolz are welcome!
+
