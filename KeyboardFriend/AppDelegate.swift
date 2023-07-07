@@ -12,19 +12,29 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     var qmkInfoService: QMKInfoService = QMKInfoService()
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
-            if event.keyCode == 111 { // F16 Key
-                if !(self.newEntryPanel?.isVisible ?? false) {
-                    self.createFloatingPanel(drawLayout: self.qmkInfoService.currentDrawLayout)
-                    self.newEntryPanel.center()
-                    self.newEntryPanel.orderFront(nil)
-                }
-            }
+        // Close main app window
+        if let window = NSApplication.shared.windows.first {
+            window.close()
         }
         
-        NSEvent.addGlobalMonitorForEvents(matching: .keyUp) { event in
-            if event.keyCode == 111 { // F16 Key
-                self.newEntryPanel?.close()
+        let prompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String
+        let options: NSDictionary = [prompt: true]
+        let appHasPermission = AXIsProcessTrustedWithOptions(options)
+        if appHasPermission {
+            NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
+                if event.keyCode == 106 { // F16 Key
+                    if !(self.newEntryPanel?.isVisible ?? false) {
+                        self.createFloatingPanel(drawLayout: self.qmkInfoService.currentDrawLayout)
+                        self.newEntryPanel.center()
+                        self.newEntryPanel.orderFront(nil)
+                    }
+                }
+            }
+            
+            NSEvent.addGlobalMonitorForEvents(matching: .keyUp) { event in
+                if event.keyCode == 106 { // F16 Key
+                    self.newEntryPanel?.close()
+                }
             }
         }
     }

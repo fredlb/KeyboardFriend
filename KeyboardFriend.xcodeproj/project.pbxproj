@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		35B11A422A574F2B00C22C74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35B11A412A574F2B00C22C74 /* Assets.xcassets */; };
 		35B11A452A574F2B00C22C74 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35B11A442A574F2B00C22C74 /* Preview Assets.xcassets */; };
 		35B11A542A574F7700C22C74 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A4C2A574F7600C22C74 /* SettingsView.swift */; };
 		35B11A552A574F7700C22C74 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A4D2A574F7600C22C74 /* KeyboardView.swift */; };
@@ -21,7 +20,6 @@
 
 /* Begin PBXFileReference section */
 		35B11A3A2A574F2B00C22C74 /* KeyboardFriend.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeyboardFriend.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		35B11A412A574F2B00C22C74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35B11A442A574F2B00C22C74 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		35B11A462A574F2B00C22C74 /* KeyboardFriend.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KeyboardFriend.entitlements; sourceTree = "<group>"; };
 		35B11A4C2A574F7600C22C74 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -72,7 +70,6 @@
 				35B11A4E2A574F7600C22C74 /* QMKInfo.swift */,
 				35B11A532A574F7700C22C74 /* QMKInfoService.swift */,
 				35B11A4C2A574F7600C22C74 /* SettingsView.swift */,
-				35B11A412A574F2B00C22C74 /* Assets.xcassets */,
 				35B11A462A574F2B00C22C74 /* KeyboardFriend.entitlements */,
 				35B11A432A574F2B00C22C74 /* Preview Content */,
 			);
@@ -147,7 +144,6 @@
 			files = (
 				35B11A452A574F2B00C22C74 /* Preview Assets.xcassets in Resources */,
 				35B11A572A574F7700C22C74 /* Assets.xcassets in Resources */,
-				35B11A422A574F2B00C22C74 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,7 +283,7 @@
 		35B11A4A2A574F2B00C22C74 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconPurpleNew;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = KeyboardFriend/KeyboardFriend.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -295,7 +291,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"KeyboardFriend/Preview Content\"";
 				DEVELOPMENT_TEAM = CXM9GKL4GU;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -314,7 +310,7 @@
 		35B11A4B2A574F2B00C22C74 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconPurpleNew;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = KeyboardFriend/KeyboardFriend.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -322,7 +318,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"KeyboardFriend/Preview Content\"";
 				DEVELOPMENT_TEAM = CXM9GKL4GU;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";

@@ -10,15 +10,15 @@ import SwiftUI
 @main
 struct KeyboardFriendApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @Environment(\.openWindow) var openWindow
     
     var body: some Scene {
-        WindowGroup {
+        WindowGroup(id: "settings-view") {
             SettingsView().environmentObject(appDelegate.qmkInfoService)
         }
-        MenuBarExtra("KEEB") {
+        MenuBarExtra("KF") {
             Button("Settings"){
-                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-                NSApp.activate(ignoringOtherApps: true)
+                openWindow(id: "settings-view")
             }
             Divider()
             Button("Quit") {
