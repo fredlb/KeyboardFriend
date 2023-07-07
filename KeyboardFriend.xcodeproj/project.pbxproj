@@ -16,6 +16,7 @@
 		35B11A592A574F7700C22C74 /* KeyboardFriendApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A512A574F7700C22C74 /* KeyboardFriendApp.swift */; };
 		35B11A5A2A574F7700C22C74 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A522A574F7700C22C74 /* FloatingPanel.swift */; };
 		35B11A5B2A574F7700C22C74 /* QMKInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A532A574F7700C22C74 /* QMKInfoService.swift */; };
+		35B11A5D2A582A0A00C22C74 /* KeyboardSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A5C2A582A0A00C22C74 /* KeyboardSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		35B11A512A574F7700C22C74 /* KeyboardFriendApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardFriendApp.swift; sourceTree = "<group>"; };
 		35B11A522A574F7700C22C74 /* FloatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
 		35B11A532A574F7700C22C74 /* QMKInfoService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QMKInfoService.swift; sourceTree = "<group>"; };
+		35B11A5C2A582A0A00C22C74 /* KeyboardSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				35B11A4E2A574F7600C22C74 /* QMKInfo.swift */,
 				35B11A532A574F7700C22C74 /* QMKInfoService.swift */,
 				35B11A4C2A574F7600C22C74 /* SettingsView.swift */,
+				35B11A5C2A582A0A00C22C74 /* KeyboardSettingsView.swift */,
 				35B11A462A574F2B00C22C74 /* KeyboardFriend.entitlements */,
 				35B11A432A574F2B00C22C74 /* Preview Content */,
 			);
@@ -156,6 +159,7 @@
 			files = (
 				35B11A582A574F7700C22C74 /* AppDelegate.swift in Sources */,
 				35B11A592A574F7700C22C74 /* KeyboardFriendApp.swift in Sources */,
+				35B11A5D2A582A0A00C22C74 /* KeyboardSettingsView.swift in Sources */,
 				35B11A5A2A574F7700C22C74 /* FloatingPanel.swift in Sources */,
 				35B11A542A574F7700C22C74 /* SettingsView.swift in Sources */,
 				35B11A552A574F7700C22C74 /* KeyboardView.swift in Sources */,

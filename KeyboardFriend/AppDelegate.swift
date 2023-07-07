@@ -16,34 +16,41 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         if let window = NSApplication.shared.windows.first {
             window.close()
         }
-        
         let prompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String
         let options: NSDictionary = [prompt: true]
         let appHasPermission = AXIsProcessTrustedWithOptions(options)
         if appHasPermission {
             NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
-                if event.keyCode == 106 { // F16 Key
-                    if !(self.newEntryPanel?.isVisible ?? false) {
-                        self.createFloatingPanel(drawLayout: self.qmkInfoService.currentDrawLayout)
-                        self.newEntryPanel.center()
-                        self.newEntryPanel.orderFront(nil)
+                let currentHotkeys = self.qmkInfoService.hotkeys
+                for hotkey in Array(currentHotkeys) {
+                    if event.keyCode == hotkey.value {
+                        if !(self.newEntryPanel?.isVisible ?? false) {
+                            self.createFloatingPanel(layer: hotkey.key, drawLayout: self.qmkInfoService.currentDrawLayout)
+                            self.newEntryPanel.center()
+                            self.newEntryPanel.orderFront(nil)
+                        }
                     }
                 }
             }
             
             NSEvent.addGlobalMonitorForEvents(matching: .keyUp) { event in
-                if event.keyCode == 106 { // F16 Key
-                    self.newEntryPanel?.close()
+                let currentHotkeys = self.qmkInfoService.hotkeys
+                for hotkey in Array(currentHotkeys) {
+                    print(hotkey)
+                    if event.keyCode == hotkey.value {
+                        self.newEntryPanel?.close()
+                        self.newEntryPanel = nil
+                    }
                 }
             }
         }
     }
     
-    private func createFloatingPanel(drawLayout: DrawLayout) {
-        let contentView = KeyboardView(maxWidth: drawLayout.keyboardWidth, maxHeight: drawLayout.keyboardHeigt, layer: drawLayout.layers["L0"]!).edgesIgnoringSafeArea(.top).padding()
+    private func createFloatingPanel(layer: String, drawLayout: DrawLayout) {
+        let contentView = KeyboardView(maxWidth: drawLayout.keyboardWidth, maxHeight: drawLayout.keyboardHeigt, layer: drawLayout.layers[layer]!).edgesIgnoringSafeArea(.top).padding()
         
         newEntryPanel = FloatingPanel(contentRect: NSRect(x:0, y:0, width: 512, height: 256), backing: .buffered, defer: false)
-        newEntryPanel.title = "Floaty boi"
         newEntryPanel.contentView = NSHostingView(rootView: contentView)
     }
+    
 }

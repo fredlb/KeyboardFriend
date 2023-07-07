@@ -11,6 +11,7 @@ class QMKInfoService: ObservableObject {
     
     @Published var currentDrawLayout: DrawLayout = DrawLayout(keyboardWidth: 0.0, keyboardHeigt: 0.0, layers: ["":[]])
     @Published var layouts: [String] = []
+    @Published var hotkeys: [String:Int] = [:]
     
     var qmkInfo: QMKInfo?
     var currentKeymap: QMKKeymap?
@@ -56,5 +57,11 @@ class QMKInfoService: ObservableObject {
         }
         
         return DrawLayout(keyboardWidth: Double(maxWidth), keyboardHeigt: Double(maxHeight), layers: allLayers)
+    }
+    
+    func setHotkeyForLayer(layer: String, keyCode: Int) {
+        self.hotkeys.updateValue(keyCode, forKey: layer)
+        print(self.hotkeys)
+        
     }
 }
