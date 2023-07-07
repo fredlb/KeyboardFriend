@@ -57,11 +57,15 @@ struct SettingsView: View {
             }
             Divider()
             VStack {
-                TabView {
-                    ForEach(qmkInfoService.currentDrawLayout.layers.sorted(by: {$0.key < $1.key}), id: \.key) {
-                        layerName, layer in
-                        KeyboardSettingsView(layer: layer, layerName: layerName)
-                        .tabItem{Text("Layer \(layerName)")}
+                if qmkInfoService.qmkInfo == nil {
+                    Text("Load a QMK JSON config to get started")
+                } else {
+                    TabView {
+                        ForEach(qmkInfoService.currentDrawLayout.layers.sorted(by: {$0.key < $1.key}), id: \.key) {
+                            layerName, layer in
+                            KeyboardSettingsView(layer: layer, layerName: layerName)
+                                .tabItem{Text("Layer \(layerName)")}
+                        }
                     }
                 }
             }.frame(maxHeight: .infinity)

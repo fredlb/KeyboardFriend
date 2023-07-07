@@ -32,6 +32,7 @@
 		35B11A522A574F7700C22C74 /* FloatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
 		35B11A532A574F7700C22C74 /* QMKInfoService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QMKInfoService.swift; sourceTree = "<group>"; };
 		35B11A5C2A582A0A00C22C74 /* KeyboardSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSettingsView.swift; sourceTree = "<group>"; };
+		35B11A5E2A583E5900C22C74 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +49,7 @@
 		35B11A312A574F2B00C22C74 = {
 			isa = PBXGroup;
 			children = (
+				35B11A5E2A583E5900C22C74 /* README.md */,
 				35B11A3C2A574F2B00C22C74 /* KeyboardFriend */,
 				35B11A3B2A574F2B00C22C74 /* Products */,
 			);
