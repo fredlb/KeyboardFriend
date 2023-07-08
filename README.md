@@ -17,6 +17,9 @@ This is a simple little application for macOS that can show you an overlay of a 
 You give it your QMK json layout, and it allows you to set a hotkey (F16-F20) for a layer.
 Holding down that hotkey will display an overlay (that does not steal focus) of the current layer.
 
+## Using with iTerm2
+Due to iTerm2 (or bash/zsh, I don't know) sends funny escape sequences on F16-F20, go into the settings of iTerm2 and map those keys to "Ignore" to prevent them from screwing up your session.
+
 <p align="center">
   <img src="settings.png">
 </p>
