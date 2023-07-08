@@ -145,7 +145,12 @@ struct QMKKeycodeMap {
         "RABK": ">",
         "GT": ">",
         "QUESTION": "?",
-        "QUES": "?"
+        "QUES": "?",
+        "LEFT": "←",
+        "DOWN": "↓",
+        "UP": "↑",
+        "RGHT": "→",
+        
     ]
     
     static func convertQMKKeycode(_ keycode: String) -> String {
