@@ -25,6 +25,8 @@ struct KeyboardView: View {
                         Text(QMKKeycodeMap.convertQMKKeycode(keyButton.text))
                             .foregroundColor(.white)
                             .padding()
+                            .fontDesign(.monospaced)
+                            .fontWeight(.bold)
                     )
                     .position(x: ((keyButton.x + width/2.0) * scale), y: ((keyButton.y + 1.0/2.0) * scale))
             }
