@@ -12,6 +12,7 @@ class QMKInfoService: ObservableObject {
     @Published var currentDrawLayout: DrawLayout = DrawLayout(keyboardWidth: 0.0, keyboardHeigt: 0.0, layers: ["":[]])
     @Published var layouts: [String] = []
     @Published var hotkeys: [String:Int] = [:]
+    @Published var holdHotkey: Bool = false
     
     var qmkInfo: QMKInfo?
     var currentKeymap: QMKKeymap?

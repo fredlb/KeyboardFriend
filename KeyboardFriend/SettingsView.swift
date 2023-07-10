@@ -15,6 +15,7 @@ struct SettingsView: View {
     @State var layoutSelection: String = ""
     @State var hotkeySelection: String = ""
     private let hotkeys:[String:Int] = ["F13":111, "F14":112, "F15": 113, "F16": 114, "F17": 115]
+    @State var holdHotkey: Bool = false
     
     var body: some View {
         VStack{
@@ -54,6 +55,13 @@ struct SettingsView: View {
                 .frame(maxWidth: 200)
                 .disabled(qmkInfoService.qmkInfo == nil)
                 .pickerStyle(MenuPickerStyle())
+                Toggle(isOn: $holdHotkey) {
+                    Text("Hold")
+                }
+                .onChange(of: holdHotkey) { _ in
+                    qmkInfoService.holdHotkey.toggle()
+                }
+                .toggleStyle(.checkbox)
             }
             Divider()
             VStack {
