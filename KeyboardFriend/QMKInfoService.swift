@@ -19,11 +19,10 @@ class QMKInfoService: ObservableObject {
     
     func fetchQMKInfo(keymap: QMKKeymap) async throws {
         self.currentKeymap = keymap
-        let url = "https://keyboards.qmk.fm/v1/keyboards/\(keymap.keyboard)/info.json"
-        let (data, _) = try await URLSession.shared.data(from: URL(string: url)!)
+        let data = try await self.fetchFromLocalOrRemote(keyboard: keymap.keyboard)
         
         Task { @MainActor in
-            self.qmkInfo = try JSONDecoder().decode(QMKInfo.self, from: data)
+            self.qmkInfo = try JSONDecoder().decode(QMKInfo.self, from: data!)
             let qmkInfoFirstLayout = self.qmkInfo!.keyboards[keymap.keyboard]!.layouts.first!.key
             self.layouts = Array(self.qmkInfo!.keyboards[keymap.keyboard]!.layouts.keys)
             self.currentDrawLayout = generateDrawConfig(layoutKey: qmkInfoFirstLayout)
@@ -62,7 +61,72 @@ class QMKInfoService: ObservableObject {
     
     func setHotkeyForLayer(layer: String, keyCode: Int) {
         self.hotkeys.updateValue(keyCode, forKey: layer)
-        print(self.hotkeys)
-        
+    }
+    
+    func fetchFromLocalOrRemote(keyboard: String) async throws -> Data? {
+        let url = "https://keyboards.qmk.fm/v1/keyboards/\(keyboard)/info.json"
+        let keyboardFile = keyboard.replacingOccurrences(of: "/", with: "-")
+        let fileIO = FileIOController()
+        let data = try fileIO.loadJSON(withFilename: keyboardFile)
+        if (data == nil) {
+            let (data, _) = try await URLSession.shared.data(from: URL(string: url)!)
+            try fileIO.write(data, toDocumentNamed: "\(keyboardFile).json")
+            return data
+        } else {
+            return data
+        }
+    }
+}
+
+struct FileIOController {
+    var manager = FileManager.default
+
+    func write(
+        _ object: Data,
+        toDocumentNamed documentName: String
+    ) throws {
+        let rootFolderURL = try manager.url(
+            for: .cachesDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: false
+        )
+
+        let nestedFolderURL = rootFolderURL.appendingPathComponent("KeyboardFriend")
+
+        do {
+            try manager.createDirectory(
+                at: nestedFolderURL,
+                withIntermediateDirectories: false,
+                attributes: nil
+            )
+        } catch CocoaError.fileWriteFileExists {
+            // Folder already existed
+        } catch {
+            throw error
+        }
+
+        let fileURL = nestedFolderURL.appendingPathComponent(documentName)
+        try object.write(to: fileURL)
+    }
+    
+    func loadJSON(withFilename filename: String) throws -> Data? {
+        let rootFolderURL = try manager.url(
+            for: .cachesDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: false
+        )
+
+        let nestedFolderURL = rootFolderURL.appendingPathComponent("KeyboardFriend")
+    
+        var fileURL = nestedFolderURL.appendingPathComponent(filename)
+        fileURL = fileURL.appendingPathExtension("json")
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return data
+        } catch {
+            return nil
+        }
     }
 }

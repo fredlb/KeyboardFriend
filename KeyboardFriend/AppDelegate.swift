@@ -23,7 +23,6 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         if appHasPermission {
             NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
                 let hold = self.qmkInfoService.holdHotkey
-                print(hold)
                 if hold {
                     self.handleHoldHotkeys(event: event)
                 } else {
