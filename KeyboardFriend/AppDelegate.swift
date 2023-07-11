@@ -76,7 +76,6 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         let currentHotkeys = self.qmkInfoService.hotkeys
         for hotkey in Array(currentHotkeys) {
             if event.keyCode == hotkey.value {
-                print(self.isPanelShowing)
                 if !self.isPanelShowing {
                     self.createFloatingPanel(layer: hotkey.key, drawLayout: self.qmkInfoService.currentDrawLayout)
                     self.newEntryPanel.center()
