@@ -16,7 +16,7 @@ struct KeyboardFriendApp: App {
         WindowGroup(id: "settings-view") {
             SettingsView().environmentObject(appDelegate.qmkInfoService)
         }
-        MenuBarExtra("KF") {
+        MenuBarExtra("KF", systemImage: "keyboard.badge.eye") {
             Button("Settings"){
                 openWindow(id: "settings-view")
             }
