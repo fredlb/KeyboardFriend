@@ -10,6 +10,7 @@ import SwiftUI
 class AppDelegate:NSObject, NSApplicationDelegate {
     var newEntryPanel: FloatingPanel!
     var qmkInfoService: QMKInfoService = QMKInfoService()
+    var isPanelShowing: Bool = false
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Close main app window
@@ -21,8 +22,8 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         let appHasPermission = AXIsProcessTrustedWithOptions(options)
         if appHasPermission {
             NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
-                let currentHotkeys = self.qmkInfoService.hotkeys
                 let hold = self.qmkInfoService.holdHotkey
+                print(hold)
                 if hold {
                     self.handleHoldHotkeys(event: event)
                 } else {
@@ -31,7 +32,6 @@ class AppDelegate:NSObject, NSApplicationDelegate {
             }
             
             NSEvent.addGlobalMonitorForEvents(matching: .keyUp) { event in
-                let currentHotkeys = self.qmkInfoService.hotkeys
                 let hold = self.qmkInfoService.holdHotkey
                 if hold {
                     self.handleHoldHotkeys(event: event)
@@ -48,26 +48,25 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     }
     
     private func handleHoldHotkeys(event: NSEvent) {
-        NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
-            let currentHotkeys = self.qmkInfoService.hotkeys
+        let currentHotkeys = self.qmkInfoService.hotkeys
+        
+        if event.type == .keyDown {
             for hotkey in Array(currentHotkeys) {
                 if event.keyCode == hotkey.value {
-                    if !(self.newEntryPanel?.isVisible ?? false) {
+                    if !self.isPanelShowing {
                         self.createFloatingPanel(layer: hotkey.key, drawLayout: self.qmkInfoService.currentDrawLayout)
                         self.newEntryPanel.center()
                         self.newEntryPanel.orderFront(nil)
+                        self.isPanelShowing = true
                     }
                 }
             }
-        }
-        
-        NSEvent.addGlobalMonitorForEvents(matching: .keyUp) { event in
-            let currentHotkeys = self.qmkInfoService.hotkeys
+        } else if event.type == .keyUp {
             for hotkey in Array(currentHotkeys) {
-                print(hotkey)
                 if event.keyCode == hotkey.value {
                     self.newEntryPanel?.close()
                     self.newEntryPanel = nil
+                    self.isPanelShowing = false
                 }
             }
         }
@@ -77,13 +76,16 @@ class AppDelegate:NSObject, NSApplicationDelegate {
         let currentHotkeys = self.qmkInfoService.hotkeys
         for hotkey in Array(currentHotkeys) {
             if event.keyCode == hotkey.value {
-                if !(self.newEntryPanel?.isVisible ?? false) {
+                print(self.isPanelShowing)
+                if !self.isPanelShowing {
                     self.createFloatingPanel(layer: hotkey.key, drawLayout: self.qmkInfoService.currentDrawLayout)
                     self.newEntryPanel.center()
                     self.newEntryPanel.orderFront(nil)
-                } else if (self.newEntryPanel?.isVisible ?? false) {
+                    self.isPanelShowing = true
+                } else {
                     self.newEntryPanel?.close()
                     self.newEntryPanel = nil
+                    self.isPanelShowing = false
                 }
             }
         }
