@@ -1,6 +1,6 @@
 //
-//  KeebDrawTestApp.swift
-//  KeebDrawTest
+//  KeyboardFriendApp.swift
+//  KeyboardFriend
 //
 //  Created by Fredrik Lindner on 2023-07-04.
 //

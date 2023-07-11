@@ -1,6 +1,6 @@
 //
 //  LayersView.swift
-//  KeebDrawTest
+//  KeyboardFriend
 //
 //  Created by Fredrik Lindner on 2023-07-04.
 //
