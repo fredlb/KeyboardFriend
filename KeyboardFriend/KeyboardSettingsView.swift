@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct KeyboardSettingsView: View {
-    @StateObject var kfKeyboardStore: KFKeyboardStore = KFKeyboardStore.shared
+    @EnvironmentObject var kfKeyboardStore: KFKeyboardStore
     
     let layer: [DrawEntry]
     let layerName: String

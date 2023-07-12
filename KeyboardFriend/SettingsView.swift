@@ -11,7 +11,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var qmkInfoService: QMKInfoService
-    @StateObject var kfKeyboardStore: KFKeyboardStore = KFKeyboardStore.shared
+    @EnvironmentObject var kfKeyboardStore: KFKeyboardStore
     
     @State var hotkeySetting = [String:Int]()
     @State var layoutSelection: String?
@@ -38,7 +38,8 @@ struct SettingsView: View {
                             let decoder = JSONDecoder()
                             let keymap = try decoder.decode(QMKKeymap.self, from: jsonData)
                             Task {
-                                try? await qmkInfoService.generateKFKeyboardFromQMKKeymap(keymap: keymap)
+                                let result = try? await qmkInfoService.generateKFKeyboardFromQMKKeymap(keymap: keymap)
+                                kfKeyboardStore.activeKeyboard = try result?.get()
                             }
                         } catch {
                             print("Error loading JSON: \(error)")
@@ -89,7 +90,7 @@ struct SettingsView: View {
                     TabView {
                         ForEach((kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.layers.sorted(by: {$0.key < $1.key}))!, id: \.key) {
                             layerName, layer in
-                            KeyboardSettingsView(layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!)
+                            KeyboardSettingsView(layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!).environmentObject(kfKeyboardStore)
                                 .tabItem{Text("Layer \(layerName)")}
                         }
                     }
@@ -99,23 +100,6 @@ struct SettingsView: View {
             }.frame(maxHeight: .infinity)
         }
         .padding()
-//        .onFirstAppear() {
-//            print("firstAppear")
-//            let defaults = UserDefaults.standard
-//            let lastUsedKeyboardFile = defaults.string(forKey: "keyboardFile")
-//            if lastUsedKeyboardFile != nil {
-//                do {
-//                    let jsonData = try Data(contentsOf: URL(string: lastUsedKeyboardFile!)!)
-//                    let decoder = JSONDecoder()
-//                    let keymap = try decoder.decode(QMKKeymap.self, from: jsonData)
-//                    Task {
-//                        try? await qmkInfoService.fetchQMKInfo(keymap: keymap)
-//                    }
-//                } catch {
-//                    print("Error loading JSON: \(error)")
-//                }
-//            }
-//        }
     }
     
 }
@@ -145,11 +129,16 @@ private struct FirstAppear: ViewModifier {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(kfKeyboardStore: KFKeyboardStore()).environmentObject({ () -> QMKInfoService in
+        SettingsView().environmentObject({ () -> QMKInfoService in
             let envObj = QMKInfoService()
             envObj.currentDrawLayout = DrawLayout(keyboardWidth: Double(14), keyboardHeigt: Double(4), name: "", layers: ["L2": []])
             return envObj
         }() )
+        .environmentObject({ () -> KFKeyboardStore in
+            let envObj = KFKeyboardStore()
+            return envObj
+        }() )
+
     }
     
     

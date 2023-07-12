@@ -10,7 +10,7 @@ import SwiftUI
 class AppDelegate:NSObject, NSApplicationDelegate {
     var newEntryPanel: FloatingPanel!
     var qmkInfoService: QMKInfoService = QMKInfoService()
-    @StateObject var kfKeyboardStore: KFKeyboardStore = KFKeyboardStore.shared
+    var kfKeyboardStore: KFKeyboardStore = KFKeyboardStore()
     var isPanelShowing: Bool = false
     
     func applicationDidFinishLaunching(_ notification: Notification) {

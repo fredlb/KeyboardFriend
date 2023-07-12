@@ -13,9 +13,6 @@ class QMKInfoService: ObservableObject {
     @Published var layouts: [String] = []
     @Published var hotkeys: [String:Int] = [:]
     @Published var holdHotkey: Bool = false
-    var kfStore = KFKeyboardStore.shared
-    
-//    var kfKeyboardStore: KFKeyboardStore = KFKeyboardStore()
     
     var qmkInfo: QMKInfo?
     var currentKeymap: QMKKeymap?
@@ -32,10 +29,10 @@ class QMKInfoService: ObservableObject {
         }
     }
     
-    func generateKFKeyboardFromQMKKeymap(keymap: QMKKeymap) async throws {
+    func generateKFKeyboardFromQMKKeymap(keymap: QMKKeymap) async throws -> Result<KFKeyboard, any Error> {
         let data = try await self.fetchFromLocalOrRemote(keyboard: keymap.keyboard)
         
-        Task { @MainActor in
+        let task = Task { @MainActor in
             let qmkInfo = try JSONDecoder().decode(QMKInfo.self, from: data!)
             let layouts = Array(qmkInfo.keyboards[keymap.keyboard]!.layouts.keys)
             var allDrawLayouts = [DrawLayout]()
@@ -43,9 +40,10 @@ class QMKInfoService: ObservableObject {
                 allDrawLayouts.append(generateDrawConfig(layoutKey: layout, qmkInfo: qmkInfo, keymap: keymap))
             }
             let keyboardName = keymap.keyboard.replacingOccurrences(of: "/", with: "-")
-            self.kfStore.activeKeyboard = KFKeyboard(name: keyboardName, drawLayouts: allDrawLayouts, settings: KFSettings(activeLayout: layouts.first!, hold: false, hotkeys: [:]))
-            print("activeKeyboard set")
+            return KFKeyboard(name: keyboardName, drawLayouts: allDrawLayouts, settings: KFSettings(activeLayout: layouts.first!, hold: false, hotkeys: [:]))
         }
+        let result = await task.result
+        return result
     }
     
     func changeDrawConfigForLayout(layoutKey: String) {

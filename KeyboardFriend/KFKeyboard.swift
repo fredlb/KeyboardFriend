@@ -24,8 +24,6 @@ struct Hotkey: Decodable, Encodable, Hashable {
     let keycode: Int
 }
 
-
-@MainActor
 class KFKeyboardStore : ObservableObject {
     static let shared = KFKeyboardStore()
     @Published var activeKeyboard: KFKeyboard?
