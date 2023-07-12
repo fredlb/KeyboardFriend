@@ -50,7 +50,7 @@ struct MatrixEntry: Codable, Hashable {
     let w: Float?
 }
 
-struct DrawEntry: Hashable {
+struct DrawEntry: Decodable, Hashable, Encodable {
     let matrix: [Int]
     let x: Double
     let y: Double
@@ -65,9 +65,10 @@ struct QMKKeymap: Codable {
     let layers: [[String]]
 }
 
-struct DrawLayout {
+struct DrawLayout: Decodable, Encodable, Hashable {
     let keyboardWidth: Double
     let keyboardHeigt: Double
+    let name: String
     let layers: [String:[DrawEntry]]
 }
 

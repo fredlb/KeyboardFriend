@@ -9,10 +9,13 @@ import Foundation
 
 class QMKInfoService: ObservableObject {
     
-    @Published var currentDrawLayout: DrawLayout = DrawLayout(keyboardWidth: 0.0, keyboardHeigt: 0.0, layers: ["":[]])
+    @Published var currentDrawLayout: DrawLayout = DrawLayout(keyboardWidth: 0.0, keyboardHeigt: 0.0, name: "", layers: ["":[]])
     @Published var layouts: [String] = []
     @Published var hotkeys: [String:Int] = [:]
     @Published var holdHotkey: Bool = false
+    var kfStore = KFKeyboardStore.shared
+    
+//    var kfKeyboardStore: KFKeyboardStore = KFKeyboardStore()
     
     var qmkInfo: QMKInfo?
     var currentKeymap: QMKKeymap?
@@ -25,22 +28,38 @@ class QMKInfoService: ObservableObject {
             self.qmkInfo = try JSONDecoder().decode(QMKInfo.self, from: data!)
             let qmkInfoFirstLayout = self.qmkInfo!.keyboards[keymap.keyboard]!.layouts.first!.key
             self.layouts = Array(self.qmkInfo!.keyboards[keymap.keyboard]!.layouts.keys)
-            self.currentDrawLayout = generateDrawConfig(layoutKey: qmkInfoFirstLayout)
+            self.currentDrawLayout = generateDrawConfig(layoutKey: qmkInfoFirstLayout, qmkInfo: self.qmkInfo!, keymap: keymap)
+        }
+    }
+    
+    func generateKFKeyboardFromQMKKeymap(keymap: QMKKeymap) async throws {
+        let data = try await self.fetchFromLocalOrRemote(keyboard: keymap.keyboard)
+        
+        Task { @MainActor in
+            let qmkInfo = try JSONDecoder().decode(QMKInfo.self, from: data!)
+            let layouts = Array(qmkInfo.keyboards[keymap.keyboard]!.layouts.keys)
+            var allDrawLayouts = [DrawLayout]()
+            for layout in layouts {
+                allDrawLayouts.append(generateDrawConfig(layoutKey: layout, qmkInfo: qmkInfo, keymap: keymap))
+            }
+            let keyboardName = keymap.keyboard.replacingOccurrences(of: "/", with: "-")
+            self.kfStore.activeKeyboard = KFKeyboard(name: keyboardName, drawLayouts: allDrawLayouts, settings: KFSettings(activeLayout: layouts.first!, hold: false, hotkeys: [Hotkey(key: "F16", keycode: 111)]))
+            print("activeKeyboard set")
         }
     }
     
     func changeDrawConfigForLayout(layoutKey: String) {
-        self.currentDrawLayout = generateDrawConfig(layoutKey: layoutKey)
+        self.currentDrawLayout = generateDrawConfig(layoutKey: layoutKey, qmkInfo: self.qmkInfo!, keymap: self.currentKeymap!)
     }
     
-    private func generateDrawConfig(layoutKey: String) -> DrawLayout {
-        let layout = self.qmkInfo!.keyboards[self.currentKeymap!.keyboard]!.layouts[layoutKey]!.layout
+    private func generateDrawConfig(layoutKey: String, qmkInfo: QMKInfo, keymap: QMKKeymap) -> DrawLayout {
+        let layout = qmkInfo.keyboards[keymap.keyboard]!.layouts[layoutKey]!.layout
         
         var allLayers = [String: [DrawEntry]]()
         var maxWidth = Float(0.0)
         var maxHeight = Float(0.0)
         
-        for (index, layer) in self.currentKeymap!.layers.enumerated() {
+        for (index, layer) in keymap.layers.enumerated() {
             var drawLayoutTemp: [DrawEntry] = []
             
             for (index, matrixEntry) in layout.enumerated() {
@@ -56,7 +75,7 @@ class QMKInfoService: ObservableObject {
             allLayers["L\(index)"] = drawLayoutTemp
         }
         
-        return DrawLayout(keyboardWidth: Double(maxWidth), keyboardHeigt: Double(maxHeight), layers: allLayers)
+        return DrawLayout(keyboardWidth: Double(maxWidth), keyboardHeigt: Double(maxHeight), name: layoutKey, layers: allLayers)
     }
     
     func setHotkeyForLayer(layer: String, keyCode: Int) {

@@ -11,6 +11,7 @@ import SwiftUI
 struct KeyboardFriendApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @Environment(\.openWindow) var openWindow
+    @StateObject private var kfKeyboardStore = KFKeyboardStore.shared
     
     var body: some Scene {
         WindowGroup(id: "settings-view") {
