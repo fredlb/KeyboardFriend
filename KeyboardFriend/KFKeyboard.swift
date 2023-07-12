@@ -16,10 +16,10 @@ struct KFKeyboard: Decodable, Encodable {
 struct KFSettings: Decodable, Encodable {
     var activeLayout: String
     var hold: Bool
-    var hotkeys: [Hotkey]
+    var hotkeys: [String:Hotkey]
 }
 
-struct Hotkey: Decodable, Encodable {
+struct Hotkey: Decodable, Encodable, Hashable {
     let key: String
     let keycode: Int
 }

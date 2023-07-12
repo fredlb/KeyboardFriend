@@ -67,6 +67,9 @@ struct SettingsView: View {
                         Text($0.name).tag($0.name as String?)
                     }
                 }
+                .onChange(of: layoutSelection ?? "None") { newValue in
+                    kfKeyboardStore.activeKeyboard?.settings.activeLayout = newValue
+                }
                 .frame(maxWidth: 200)
                 .pickerStyle(MenuPickerStyle())
                 
@@ -89,12 +92,9 @@ struct SettingsView: View {
                             KeyboardSettingsView(layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!)
                                 .tabItem{Text("Layer \(layerName)")}
                         }
-//                        ForEach(qmkInfoService.currentDrawLayout.layers.sorted(by: {$0.key < $1.key}), id: \.key) {
-//                            layerName, layer in
-//                            KeyboardSettingsView(layer: layer, layerName: layerName)
-//                                .tabItem{Text("Layer \(layerName)")}
-//                        }
                     }
+                } else {
+                    Text("Pick a layout")
                 }
             }.frame(maxHeight: .infinity)
         }
@@ -118,19 +118,6 @@ struct SettingsView: View {
 //        }
     }
     
-    @ViewBuilder
-    func pickerContent() -> some View {
-        ForEach(kfKeyboardStore.activeKeyboard?.drawLayouts ?? [], id: \.self) {
-            Text($0.name)
-        }
-    }
-    
-    @ViewBuilder
-    func hotKeyPickerContent() -> some View {
-        ForEach(Array(hotkeys), id: \.key) {
-            Text($0.key)
-        }
-    }
 }
 
 public extension View {

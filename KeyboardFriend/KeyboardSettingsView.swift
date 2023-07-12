@@ -8,27 +8,33 @@
 import SwiftUI
 
 struct KeyboardSettingsView: View {
+    @StateObject var kfKeyboardStore: KFKeyboardStore = KFKeyboardStore.shared
+    
     let layer: [DrawEntry]
     let layerName: String
     let maxWidth: Double
     let maxHeight: Double
-    @State var hotkeySelection: String = ""
-    private let hotkeys:[String:Int] = ["F16":106, "F17":64, "F18": 79, "F19": 80, "F20": 90]
+    @State var hotkeySelection: Hotkey?
+    private let hotkeys:[Hotkey] = [Hotkey(key: "F16", keycode: 106),Hotkey(key: "F17", keycode: 64)]
     
     var body: some View {
         VStack {
             HStack {
-                Picker("Keyboard shortcut", selection: $hotkeySelection) {
-                    ForEach(Array(hotkeys), id: \.key) {
-                        Text($0.key)
-                    }
-                    .onChange(of: hotkeySelection) { _ in }
-                    .frame(maxWidth: 200)
-                    Spacer()
-                }
                 
-                KeyboardView(maxWidth: maxWidth, maxHeight: maxHeight, layer: layer)
+                Picker("Keyboard shortcut", selection: $hotkeySelection) {
+                    Text("None").tag(nil as Hotkey?)
+                    ForEach(hotkeys, id: \.keycode) {
+                        Text($0.key).tag($0 as Hotkey?)
+                    }
+                    .onChange(of: hotkeySelection ?? Hotkey(key: "None", keycode: 0)) { newValue in
+                        kfKeyboardStore.activeKeyboard?.settings.hotkeys[layerName] = newValue
+                    }
+                    .frame(maxWidth: 200)
+                }
+                Spacer()
+                
             }
+            KeyboardView(maxWidth: maxWidth, maxHeight: maxHeight, layer: layer)
         }
     }
 }

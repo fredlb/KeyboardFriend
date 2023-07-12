@@ -43,7 +43,7 @@ class QMKInfoService: ObservableObject {
                 allDrawLayouts.append(generateDrawConfig(layoutKey: layout, qmkInfo: qmkInfo, keymap: keymap))
             }
             let keyboardName = keymap.keyboard.replacingOccurrences(of: "/", with: "-")
-            self.kfStore.activeKeyboard = KFKeyboard(name: keyboardName, drawLayouts: allDrawLayouts, settings: KFSettings(activeLayout: layouts.first!, hold: false, hotkeys: [Hotkey(key: "F16", keycode: 111)]))
+            self.kfStore.activeKeyboard = KFKeyboard(name: keyboardName, drawLayouts: allDrawLayouts, settings: KFSettings(activeLayout: layouts.first!, hold: false, hotkeys: [:]))
             print("activeKeyboard set")
         }
     }

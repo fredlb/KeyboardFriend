@@ -14,10 +14,6 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     var isPanelShowing: Bool = false
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Close main app window
-        if let window = NSApplication.shared.windows.first {
-            window.close()
-        }
         let prompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String
         let options: NSDictionary = [prompt: true]
         let appHasPermission = AXIsProcessTrustedWithOptions(options)
@@ -48,13 +44,14 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     }
     
     private func handleHoldHotkeys(event: NSEvent) {
-        let currentHotkeys = self.qmkInfoService.hotkeys
+        let currentHotkeys = kfKeyboardStore.activeKeyboard?.settings.hotkeys
         
         if event.type == .keyDown {
-            for hotkey in Array(currentHotkeys) {
-                if event.keyCode == hotkey.value {
+            for hotkey in currentHotkeys ?? [:] {
+                if event.keyCode == hotkey.value.keycode {
                     if !self.isPanelShowing {
-                        self.createFloatingPanel(layer: hotkey.key, drawLayout: self.qmkInfoService.currentDrawLayout)
+                        let activeLayout = kfKeyboardStore.activeKeyboard?.settings.activeLayout
+                        self.createFloatingPanel(layer: hotkey.key, drawLayout: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == activeLayout})!)
                         self.newEntryPanel.center()
                         self.newEntryPanel.orderFront(nil)
                         self.isPanelShowing = true
@@ -62,8 +59,8 @@ class AppDelegate:NSObject, NSApplicationDelegate {
                 }
             }
         } else if event.type == .keyUp {
-            for hotkey in Array(currentHotkeys) {
-                if event.keyCode == hotkey.value {
+            for hotkey in currentHotkeys ?? [:] {
+                if event.keyCode == hotkey.value.keycode {
                     self.newEntryPanel?.close()
                     self.newEntryPanel = nil
                     self.isPanelShowing = false
@@ -73,11 +70,12 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     }
     
     private func handlePersistantHotkey(event: NSEvent) {
-        let currentHotkeys = self.qmkInfoService.hotkeys
-        for hotkey in Array(currentHotkeys) {
-            if event.keyCode == hotkey.value {
+        let currentHotkeys = kfKeyboardStore.activeKeyboard?.settings.hotkeys
+        for hotkey in currentHotkeys ?? [:] {
+            if event.keyCode == hotkey.value.keycode {
                 if !self.isPanelShowing {
-                    self.createFloatingPanel(layer: hotkey.key, drawLayout: self.qmkInfoService.currentDrawLayout)
+                    let activeLayout = kfKeyboardStore.activeKeyboard?.settings.activeLayout
+                    self.createFloatingPanel(layer: hotkey.key, drawLayout: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == activeLayout})!)
                     self.newEntryPanel.center()
                     self.newEntryPanel.orderFront(nil)
                     self.isPanelShowing = true
