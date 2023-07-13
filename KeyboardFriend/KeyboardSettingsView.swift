@@ -20,7 +20,6 @@ struct KeyboardSettingsView: View {
     var body: some View {
         VStack {
             HStack {
-                
                 Picker("Keyboard shortcut", selection: $hotkeySelection) {
                     Text("None").tag(nil as Hotkey?)
                     ForEach(hotkeys, id: \.keycode) {
@@ -32,10 +31,9 @@ struct KeyboardSettingsView: View {
                     .onReceive(kfKeyboardStore.$activeKeyboard) {
                         self.hotkeySelection = $0?.settings.hotkeys[layerName]
                     }
-                    .frame(maxWidth: 200)
-                }
+                    
+                }.frame(maxWidth: 200, maxHeight: 20)
                 Spacer()
-                
             }
             KeyboardView(maxWidth: maxWidth, maxHeight: maxHeight, layer: layer)
         }

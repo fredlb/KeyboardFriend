@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3514FA1C2A5E8AF200F9D57C /* KFKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3514FA1B2A5E8AF200F9D57C /* KFKeyboard.swift */; };
+		35ABF4592A6018640026737B /* Keycap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35ABF4582A6018640026737B /* Keycap.swift */; };
 		35B11A452A574F2B00C22C74 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35B11A442A574F2B00C22C74 /* Preview Assets.xcassets */; };
 		35B11A542A574F7700C22C74 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A4C2A574F7600C22C74 /* SettingsView.swift */; };
 		35B11A552A574F7700C22C74 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A4D2A574F7600C22C74 /* KeyboardView.swift */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		3514FA1B2A5E8AF200F9D57C /* KFKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KFKeyboard.swift; sourceTree = "<group>"; };
+		35ABF4582A6018640026737B /* Keycap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keycap.swift; sourceTree = "<group>"; };
 		35B11A3A2A574F2B00C22C74 /* KeyboardFriend.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeyboardFriend.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35B11A442A574F2B00C22C74 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		35B11A462A574F2B00C22C74 /* KeyboardFriend.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KeyboardFriend.entitlements; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 		35B11A3C2A574F2B00C22C74 /* KeyboardFriend */ = {
 			isa = PBXGroup;
 			children = (
+				35ABF4582A6018640026737B /* Keycap.swift */,
 				3514FA1B2A5E8AF200F9D57C /* KFKeyboard.swift */,
 				35B11A502A574F7700C22C74 /* AppDelegate.swift */,
 				35B11A4F2A574F7600C22C74 /* Assets.xcassets */,
@@ -168,6 +171,7 @@
 				35B11A5D2A582A0A00C22C74 /* KeyboardSettingsView.swift in Sources */,
 				35B11A5A2A574F7700C22C74 /* FloatingPanel.swift in Sources */,
 				35B11A542A574F7700C22C74 /* SettingsView.swift in Sources */,
+				35ABF4592A6018640026737B /* Keycap.swift in Sources */,
 				35B11A552A574F7700C22C74 /* KeyboardView.swift in Sources */,
 				35B11A5B2A574F7700C22C74 /* QMKInfoService.swift in Sources */,
 				35B11A562A574F7700C22C74 /* QMKInfo.swift in Sources */,

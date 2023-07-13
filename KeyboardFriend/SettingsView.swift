@@ -125,6 +125,7 @@ struct SettingsView: View {
             }.frame(maxHeight: .infinity)
         }
         .padding()
+        .navigationTitle("KeyboardFriend \(kfKeyboardStore.activeKeyboard?.name ?? "")")
     }
     
 }
