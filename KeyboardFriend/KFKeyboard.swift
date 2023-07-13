@@ -61,11 +61,11 @@ class KFKeyboardStore : ObservableObject {
         self.activeKeyboard?.settings.activeLayout = layout
     }
     
-    func saveActiveKeyboard() async throws {
+    func saveActiveKeyboard(fileURL: URL) async throws {
         let task = Task {
             let data = try JSONEncoder().encode(activeKeyboard!)
-            let outfile = try Self.fileURL(keyboardName: activeKeyboard!.name)
-            try data.write(to: outfile)
+//            let outfile = try Self.fileURL(keyboardName: activeKeyboard!.name)
+            try data.write(to: fileURL)
         }
         _ = try await task.value
     }

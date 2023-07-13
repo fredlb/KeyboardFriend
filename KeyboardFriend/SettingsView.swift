@@ -64,8 +64,20 @@ struct SettingsView: View {
                     }
                 }
                 Button("Save configuration") {
-                    Task {
-                        try? await kfKeyboardStore.saveActiveKeyboard()
+                    let savePanel = NSSavePanel()
+                    savePanel.canCreateDirectories = true
+                    savePanel.isExtensionHidden = false
+                    savePanel.allowsOtherFileTypes = false
+                    savePanel.title = "Save your current keyboard configuration"
+                    savePanel.message = "Choose a folder and a name to store keyboard configuration."
+                    savePanel.nameFieldLabel = "File name:"
+                    
+                    savePanel.begin { response in
+                        guard response == .OK, let fileURL = savePanel.url else { return }
+                        
+                        Task {
+                            try? await kfKeyboardStore.saveActiveKeyboard(fileURL: fileURL)
+                        }
                     }
                 }.disabled(kfKeyboardStore.activeKeyboard == nil)
                 Spacer()
