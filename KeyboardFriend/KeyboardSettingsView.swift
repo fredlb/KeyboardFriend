@@ -29,6 +29,9 @@ struct KeyboardSettingsView: View {
                     .onChange(of: hotkeySelection ?? Hotkey(key: "None", keycode: 0)) { newValue in
                         kfKeyboardStore.activeKeyboard?.settings.hotkeys[layerName] = newValue
                     }
+                    .onReceive(kfKeyboardStore.$activeKeyboard) {
+                        self.hotkeySelection = $0?.settings.hotkeys[layerName]
+                    }
                     .frame(maxWidth: 200)
                 }
                 Spacer()

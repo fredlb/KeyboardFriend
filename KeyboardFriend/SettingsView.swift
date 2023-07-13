@@ -14,7 +14,7 @@ struct SettingsView: View {
     @EnvironmentObject var kfKeyboardStore: KFKeyboardStore
     
     @State var hotkeySetting = [String:Int]()
-    @State var layoutSelection: String?
+    @State var layoutSelection: String = ""
     @State var hotkeySelection: String = ""
     @State private var started: Bool = false
     private let hotkeys:[String:Int] = ["F13":111, "F14":112, "F15": 113, "F16": 114, "F17": 115]
@@ -39,7 +39,8 @@ struct SettingsView: View {
                             let keymap = try decoder.decode(QMKKeymap.self, from: jsonData)
                             Task {
                                 let result = try? await qmkInfoService.generateKFKeyboardFromQMKKeymap(keymap: keymap)
-                                kfKeyboardStore.activeKeyboard = try result?.get()
+                                let keyboard = try result?.get()
+                                kfKeyboardStore.activeKeyboard = keyboard
                             }
                         } catch {
                             print("Error loading JSON: \(error)")
@@ -57,19 +58,27 @@ struct SettingsView: View {
                         guard response == .OK, let fileURL = openPanel.urls.first else { return }
                         
                         Task {
-                            try? await kfKeyboardStore.load(fileURL: fileURL)
+                            let keeb = try? await kfKeyboardStore.load(fileURL: fileURL)
+                            kfKeyboardStore.activeKeyboard = keeb
                         }
                     }
                 }
+                Button("Save configuration") {
+                    Task {
+                        try? await kfKeyboardStore.saveActiveKeyboard()
+                    }
+                }.disabled(kfKeyboardStore.activeKeyboard == nil)
                 Spacer()
                 Picker("Layout", selection: $layoutSelection) {
-                    Text("None").tag(nil as String?)
                     ForEach(kfKeyboardStore.activeKeyboard?.drawLayouts ?? [], id: \.name) {
-                        Text($0.name).tag($0.name as String?)
+                        Text($0.name).tag($0.name)
                     }
                 }
-                .onChange(of: layoutSelection ?? "None") { newValue in
-                    kfKeyboardStore.activeKeyboard?.settings.activeLayout = newValue
+                .onChange(of: layoutSelection) { _ in
+                    kfKeyboardStore.setActiveLayout(layout: layoutSelection)
+                }
+                .onReceive(kfKeyboardStore.$activeKeyboard) {
+                    self.layoutSelection = $0?.settings.activeLayout ?? ""
                 }
                 .frame(maxWidth: 200)
                 .pickerStyle(MenuPickerStyle())
@@ -86,9 +95,9 @@ struct SettingsView: View {
             VStack {
                 if kfKeyboardStore.activeKeyboard == nil {
                     Text("Load a QMK JSON config to get started, or load an already existing configuration")
-                } else if layoutSelection != nil{
+                } else if layoutSelection != ""{
                     TabView {
-                        ForEach((kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.layers.sorted(by: {$0.key < $1.key}))!, id: \.key) {
+                        ForEach((kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == kfKeyboardStore.activeKeyboard?.settings.activeLayout}!.layers.sorted(by: {$0.key < $1.key}))!, id: \.key) {
                             layerName, layer in
                             KeyboardSettingsView(layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!).environmentObject(kfKeyboardStore)
                                 .tabItem{Text("Layer \(layerName)")}

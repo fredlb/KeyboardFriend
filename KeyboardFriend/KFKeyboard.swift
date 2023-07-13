@@ -25,7 +25,6 @@ struct Hotkey: Decodable, Encodable, Hashable {
 }
 
 class KFKeyboardStore : ObservableObject {
-    static let shared = KFKeyboardStore()
     @Published var activeKeyboard: KFKeyboard?
     
     private static func fileURL(keyboardName: String) throws -> URL {
@@ -36,9 +35,8 @@ class KFKeyboardStore : ObservableObject {
         .appendingPathComponent("\(keyboardName).data")
     }
     
-    func load(fileURL: URL) async throws {
+    func load(fileURL: URL) async throws -> KFKeyboard? {
         let task = Task<KFKeyboard?, Error> {
-//            let fileURL = try Self.fileURL(keyboardName: "")
             guard let data = try? Data(contentsOf: fileURL) else {
                 return nil
             }
@@ -46,8 +44,8 @@ class KFKeyboardStore : ObservableObject {
             return keyboard
         }
         
-        let activeKeyboard = try await task.value
-        self.activeKeyboard = activeKeyboard
+        let loadedKeyboard = try await task.value
+        return loadedKeyboard
     }
     
     func save(keyboard: KFKeyboard) async throws {
@@ -58,4 +56,18 @@ class KFKeyboardStore : ObservableObject {
         }
         _ = try await task.value
     }
+    
+    func setActiveLayout(layout: String) {
+        self.activeKeyboard?.settings.activeLayout = layout
+    }
+    
+    func saveActiveKeyboard() async throws {
+        let task = Task {
+            let data = try JSONEncoder().encode(activeKeyboard!)
+            let outfile = try Self.fileURL(keyboardName: activeKeyboard!.name)
+            try data.write(to: outfile)
+        }
+        _ = try await task.value
+    }
+    
 }
