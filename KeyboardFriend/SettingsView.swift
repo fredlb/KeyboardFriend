@@ -99,7 +99,11 @@ struct SettingsView: View {
                     Text("Hold")
                 }
                 .onChange(of: holdHotkey) { _ in
-                    qmkInfoService.holdHotkey.toggle()
+                    kfKeyboardStore.activeKeyboard?.settings.hold.toggle()
+                }
+                .onReceive(kfKeyboardStore.$activeKeyboard) {
+                    let hold = $0?.settings.hold ?? false
+                    self.holdHotkey = hold
                 }
                 .toggleStyle(.checkbox)
             }
