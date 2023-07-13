@@ -30,7 +30,9 @@ struct KeyboardView: View {
                     )
                     .position(x: ((keyButton.x + width/2.0) * scale), y: ((keyButton.y + 1.0/2.0) * scale))
             }
-        }.frame(width: (maxWidth+1.0) * scale, height: (maxHeight+1.0) * scale)
+        }
+        .drawingGroup()
+        .frame(width: (maxWidth+1.0) * scale, height: (maxHeight+1.0) * scale)
     }
 }
 
