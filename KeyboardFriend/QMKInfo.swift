@@ -48,6 +48,7 @@ struct MatrixEntry: Codable, Hashable {
     let x: Float
     let y: Float
     let w: Float?
+    let h: Float?
 }
 
 struct DrawEntry: Decodable, Hashable, Encodable {
@@ -55,6 +56,7 @@ struct DrawEntry: Decodable, Hashable, Encodable {
     let x: Double
     let y: Double
     let w: Double
+    let h: Double
     let text: String
 }
 
@@ -166,6 +168,28 @@ struct QMKKeycodeMap {
     ]
     
     static let layerPrefixes = ["MO", "TG", "TO", "TT", "DF", "OSL"]
+    
+    static let glyphsMap: [String:String] = [
+        "LGUI": "command",
+        "RGUI": "command",
+        "SPC": "space",
+        "LCTL": "control",
+        "RCTRL": "control",
+        "LALT": "option",
+        "RALT": "alt",
+        "LSFT": "shift",
+        "BSPC": "delete.backward",
+        "DEL": "delete.forward",
+        "TAB": "arrow.right.to.line.compact",
+        "ENT": "return"
+    ]
+    
+    static func getGlyph(_ keycode: String) -> String? {
+        if let glyph = glyphsMap[keycode] {
+            return glyph
+        }
+        return nil
+    }
     
     static func convertQMKKeycode(_ keycode: String) -> String {
         let strippedKeycode = keycode.deletingPrefix("KC_")

@@ -62,12 +62,12 @@ class QMKInfoService: ObservableObject {
             
             for (index, matrixEntry) in layout.enumerated() {
                 
-                drawLayoutTemp.append(DrawEntry(matrix: matrixEntry.matrix, x: Double(matrixEntry.x), y: Double(matrixEntry.y), w: Double(matrixEntry.w ?? 1), text: layer[index]))
-                if matrixEntry.x > maxWidth {
-                    maxWidth = matrixEntry.x
+                drawLayoutTemp.append(DrawEntry(matrix: matrixEntry.matrix, x: Double(matrixEntry.x), y: Double(matrixEntry.y), w: Double(matrixEntry.w ?? 1), h: Double(matrixEntry.h ?? 1), text: layer[index]))
+                if matrixEntry.x + (matrixEntry.w ?? 1.0) > maxWidth {
+                    maxWidth = matrixEntry.x + (matrixEntry.w ?? 1.0)
                 }
-                if matrixEntry.y > maxHeight {
-                    maxHeight = matrixEntry.y
+                if matrixEntry.y + (matrixEntry.h ?? 1.0) > maxHeight {
+                    maxHeight = matrixEntry.y + (matrixEntry.h ?? 1.0)
                 }
             }
             allLayers["L\(index)"] = drawLayoutTemp

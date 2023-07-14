@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Keycap: View {
     let width: Double
+    let height: Double
     let scale: Double
     let text: String
     
@@ -16,13 +17,15 @@ struct Keycap: View {
     var body: some View {
         ZStack {
             let label = QMKKeycodeMap.getLabelForQMKKeycode(text)
+            let glyph = QMKKeycodeMap.getGlyph(label.content)
             switch label.type {
             case .Text:
-                    RoundedRectangle(cornerRadius: scale/9, style: .circular)
-                        .frame(width: width * scale , height: scale)
+                let content = glyph == nil ? Text(label.content) : Text("\(Image(systemName: glyph!))")
+                RoundedRectangle(cornerRadius: scale/9, style: .circular)
+                        .frame(width: width * scale , height: height * scale)
                         .overlay(
-                            Text(label.content)
-                                .foregroundColor(.white)
+                            content
+                            .foregroundColor(.white)
                                 .padding(5)
                                 .fontDesign(.monospaced)
                                 .fontWeight(.bold)
@@ -33,7 +36,7 @@ struct Keycap: View {
             case .LayerSymbol:
                     RoundedRectangle(cornerRadius: scale/9, style: .circular)
                     .fill(Color.accentColor)
-                        .frame(width: width * scale , height: scale)
+                        .frame(width: width * scale , height: height * scale)
                         .overlay(
                             Text(label.layerText!)
                                 .foregroundColor(.white)
@@ -47,7 +50,7 @@ struct Keycap: View {
                         )
                     RoundedRectangle(cornerRadius: scale/9, style: .circular)
                         .fill(.gray)
-                        .frame(width: width * scale/2, height: scale/2)
+                        .frame(width: width * scale/2, height: height * scale/2)
                         .overlay(
                             Text(label.content)
                                 .foregroundColor(.white)
@@ -65,11 +68,11 @@ struct Keycap: View {
 struct Keycap_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            Keycap(width: 1.0, scale: 64, text: "M")
+            Keycap(width: 1.0, height: 1.0, scale: 64, text: "LGUI")
                 .previewLayout(PreviewLayout.sizeThatFits)
-                .previewDisplayName("M")
+                .previewDisplayName("LGUI")
             
-            Keycap(width: 1.0, scale: 64, text: "TT(3)")
+            Keycap(width: 1.0, height: 1.0, scale: 64, text: "TT(3)")
                 .previewLayout(PreviewLayout.sizeThatFits)
                 .previewDisplayName("MO(3)")
         }
