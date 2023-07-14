@@ -78,6 +78,18 @@ struct DrawSingleLayout {
     let layout: [DrawEntry]
 }
 
+
+enum LabelType : Encodable, Decodable {
+    case Text
+    case LayerSymbol
+}
+
+struct Label {
+    let content: String
+    let type: LabelType
+    let layerText: String?
+}
+
 struct QMKKeycodeMap {
     static let map: [String: String] = [
         // QMK keycodes
@@ -151,8 +163,9 @@ struct QMKKeycodeMap {
         "DOWN": "↓",
         "UP": "↑",
         "RGHT": "→",
-        
     ]
+    
+    static let layerPrefixes = ["MO", "TG", "TO", "TT", "DF", "OSL"]
     
     static func convertQMKKeycode(_ keycode: String) -> String {
         let strippedKeycode = keycode.deletingPrefix("KC_")
@@ -160,6 +173,66 @@ struct QMKKeycodeMap {
             return "▽"
         }
         return map[strippedKeycode] ?? strippedKeycode
+    }
+    
+    static func getLabelForQMKKeycode(_ keycode: String) -> Label {
+        let strippedKeycode = keycode.deletingPrefix("KC_")
+        if strippedKeycode == "TRNS" {
+            return Label(content: "▽", type: .Text, layerText: nil)
+        }
+        if layerPrefixes.contains(where: strippedKeycode.hasPrefix) {
+            let (number, text) = extractNumberAndText(from: strippedKeycode)!
+            return Label(content: number, type: .LayerSymbol, layerText: text)
+        }
+        return Label(content: map[strippedKeycode] ?? strippedKeycode, type: .Text, layerText: nil)
+    }
+    
+    static func extractNumber(from inputString: String) -> String? {
+        do {
+            let regex = try NSRegularExpression(pattern: "\\((\\d{1,2})\\)", options: [])
+            let range = NSRange(location: 0, length: inputString.utf16.count)
+            
+            if let match = regex.firstMatch(in: inputString, options: [], range: range) {
+                let numberRange = match.range(at: 1)
+                if let extractedRange = Range(numberRange, in: inputString) {
+                    let extractedNumber = inputString[extractedRange]
+                    
+                    if let number = Int(extractedNumber), number >= 0 && number <= 99 {
+                        return String(number)
+                    }
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        return nil
+    }
+    
+    static func extractNumberAndText(from inputString: String) -> (number: String, text: String)? {
+        do {
+            let regex = try NSRegularExpression(pattern: "([A-Z]+)\\((\\d{1,2})\\)", options: [])
+            let range = NSRange(location: 0, length: inputString.utf16.count)
+            
+            if let match = regex.firstMatch(in: inputString, options: [], range: range) {
+                let textRange = match.range(at: 1)
+                let numberRange = match.range(at: 2)
+                
+                if let extractedTextRange = Range(textRange, in: inputString),
+                   let extractedNumberRange = Range(numberRange, in: inputString) {
+                    let extractedText = inputString[extractedTextRange]
+                    let extractedNumber = inputString[extractedNumberRange]
+                    
+                    if let number = Int(extractedNumber), number >= 0 && number <= 99 {
+                        return (number: String(number), text: String(extractedText))
+                    }
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        return nil
     }
 }
 

@@ -18,7 +18,7 @@ struct KeyboardView: View {
             ForEach(layer , id: \.matrix) {
                 keyButton in
                 let width = keyButton.w
-                Keycap(x: keyButton.x, y: keyButton.y, width: width, scale: scale, text: keyButton.text)
+                Keycap(width: width, scale: scale, text: keyButton.text)
                     .position(x: ((keyButton.x + width/2.0) * scale), y: ((keyButton.y + 1.0/2.0) * scale))
                     .offset(CGSize(width: keyButton.x + width/2.0, height:(keyButton.y + 1.0/2.0)))
             }

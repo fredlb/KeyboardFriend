@@ -19,6 +19,7 @@ struct KeyboardSettingsView: View {
     
     var body: some View {
         VStack {
+            KeyboardView(maxWidth: maxWidth, maxHeight: maxHeight, layer: layer)
             HStack {
                 Picker("Keyboard shortcut", selection: $hotkeySelection) {
                     Text("None").tag(nil as Hotkey?)
@@ -33,9 +34,7 @@ struct KeyboardSettingsView: View {
                     }
                     
                 }.frame(maxWidth: 200, maxHeight: 20)
-                Spacer()
             }
-            KeyboardView(maxWidth: maxWidth, maxHeight: maxHeight, layer: layer)
         }
     }
 }
