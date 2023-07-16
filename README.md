@@ -1,7 +1,5 @@
 # KeyboardFriend
 ## A tool to help you find your way around your new keyboard's many layers
-<p align="center">🚧 This is yanky alpha software! 🚧</p>
-
 <p align="center">
   <img width=300 src="icon.png">
 </p>
@@ -14,11 +12,9 @@ You could of course print out a paper with all your layer layouts, but that mean
 
 This is a simple little application for macOS that can show you an overlay of a layer on your keyboard.
 
-You give it your QMK json layout, and it allows you to set a hotkey (F16-F20) for a layer.
-Holding down that hotkey will display an overlay (that does not steal focus) of the current layer.
+You give it your QMK json layout, and it allows you to set a hotkey for a layer.
+Tapping down that hotkey will display an overlay (that does not steal focus) of the current layer. Tap it again to hide!
 
-## Using with iTerm2
-Due to iTerm2 (or bash/zsh, I don't know) sends funny escape sequences on F16-F20, go into the settings of iTerm2 and map those keys to "Ignore" to prevent them from screwing up your session.
 
 <p align="center">
   <img src="settings.png">

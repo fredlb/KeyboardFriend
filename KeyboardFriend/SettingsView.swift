@@ -101,18 +101,6 @@ struct SettingsView: View {
                 }
                 .frame(maxWidth: 200)
                 .pickerStyle(MenuPickerStyle())
-                
-                Toggle(isOn: $holdHotkey) {
-                    Text("Hold")
-                }
-                .onChange(of: holdHotkey) { _ in
-                    kfKeyboardStore.activeKeyboard?.settings.hold.toggle()
-                }
-                .onReceive(kfKeyboardStore.$activeKeyboard) {
-                    let hold = $0?.settings.hold ?? false
-                    self.holdHotkey = hold
-                }
-                .toggleStyle(.checkbox)
             }
             Divider()
             VStack {
