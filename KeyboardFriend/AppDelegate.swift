@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Combine
+import KeyboardShortcuts
 
 class AppDelegate:NSObject, NSApplicationDelegate {
     var newEntryPanel: FloatingPanel!
@@ -13,24 +15,52 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     var kfKeyboardStore: KFKeyboardStore = KFKeyboardStore()
     var isPanelShowing: Bool = false
     
+    var changeSink: AnyCancellable?
+    
     func applicationDidFinishLaunching(_ notification: Notification) {
         let prompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String
         let options: NSDictionary = [prompt: true]
         let appHasPermission = AXIsProcessTrustedWithOptions(options)
         if appHasPermission {
-            NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
-                let hold = self.qmkInfoService.holdHotkey
-                if hold {
-                    self.handleHoldHotkeys(event: event)
+//            NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
+//                let hold = self.qmkInfoService.holdHotkey
+//                if hold {
+//                    self.handleHoldHotkeys(event: event)
+//                } else {
+//                    self.handlePersistantHotkey(event: event)
+//                }
+//            }
+//
+//            NSEvent.addGlobalMonitorForEvents(matching: .keyUp) { event in
+//                let hold = self.qmkInfoService.holdHotkey
+//                if hold {
+//                    self.handleHoldHotkeys(event: event)
+//                }
+//            }
+        }
+        
+        changeSink = kfKeyboardStore.$shortcuts.sink {
+            self.setupListeners(shortcuts: $0)
+        }
+        
+    }
+    
+    private func setupListeners(shortcuts: [String:Shortcut]) {
+        print("All kfShortcuts:\(shortcuts)")
+        KeyboardShortcuts.removeAllHandlers()
+        for shortcut in Array(shortcuts) {
+            KeyboardShortcuts.onKeyUp(for: shortcut.value.name) {
+                print("keyDown on \(shortcut.value.id)")
+                if !self.isPanelShowing {
+                    let activeLayout = self.kfKeyboardStore.activeKeyboard?.settings.activeLayout
+                    self.createFloatingPanel(layer: shortcut.key, drawLayout: (self.kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == activeLayout})!)
+                    self.newEntryPanel.center()
+                    self.newEntryPanel.orderFront(nil)
+                    self.isPanelShowing = true
                 } else {
-                    self.handlePersistantHotkey(event: event)
-                }
-            }
-            
-            NSEvent.addGlobalMonitorForEvents(matching: .keyUp) { event in
-                let hold = self.qmkInfoService.holdHotkey
-                if hold {
-                    self.handleHoldHotkeys(event: event)
+                    self.newEntryPanel?.close()
+                    self.newEntryPanel = nil
+                    self.isPanelShowing = false
                 }
             }
         }

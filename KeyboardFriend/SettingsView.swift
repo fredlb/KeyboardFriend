@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import KeyboardShortcuts
 
 
 
@@ -115,7 +116,8 @@ struct SettingsView: View {
                     TabView {
                         ForEach((kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == kfKeyboardStore.activeKeyboard?.settings.activeLayout}!.layers.sorted(by: {$0.key < $1.key}))!, id: \.key) {
                             layerName, layer in
-                            KeyboardSettingsView(layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!).environmentObject(kfKeyboardStore)
+//                            KeyboardSettingsView(kfKeyboardStore: kfKeyboardStore, layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!)
+                            KeyboardViewNew(kfKeyboardStore: kfKeyboardStore, kfName2: Shortcut(id: layerName, name: KeyboardShortcuts.Name("\(kfKeyboardStore.activeKeyboard!.name)_\(layerName)")))
                                 .tabItem{Text("Layer \(layerName)")}
                         }
                     }

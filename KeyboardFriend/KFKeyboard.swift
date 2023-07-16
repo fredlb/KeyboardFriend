@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import KeyboardShortcuts
 
 struct KFKeyboard: Decodable, Encodable {
     let name: String
@@ -26,6 +27,8 @@ struct Hotkey: Decodable, Encodable, Hashable {
 
 class KFKeyboardStore : ObservableObject {
     @Published var activeKeyboard: KFKeyboard?
+    @Published var showOverlay: Bool = false
+    @Published var shortcuts:[String:Shortcut] = [:]
     
     private static func fileURL(keyboardName: String) throws -> URL {
         try FileManager.default.url(for: .documentDirectory,
@@ -64,10 +67,14 @@ class KFKeyboardStore : ObservableObject {
     func saveActiveKeyboard(fileURL: URL) async throws {
         let task = Task {
             let data = try JSONEncoder().encode(activeKeyboard!)
-//            let outfile = try Self.fileURL(keyboardName: activeKeyboard!.name)
             try data.write(to: fileURL)
         }
         _ = try await task.value
     }
+    
+    func setUpKeyListener(shortcut: Shortcut) {
+        self.shortcuts[shortcut.id] = shortcut
+    }
+    
     
 }
