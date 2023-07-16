@@ -61,6 +61,12 @@ struct SettingsView: View {
                         Task {
                             let keeb = try? await kfKeyboardStore.load(fileURL: fileURL)
                             kfKeyboardStore.activeKeyboard = keeb
+                            
+                            let activeLayout = keeb?.settings.activeLayout
+                            for layer in keeb!.drawLayouts.first(where: {$0.name == activeLayout})!.layers.keys {
+                                print(layer)
+                                kfKeyboardStore.addShortcut(shortcut: Shortcut(id: layer, name: KeyboardShortcuts.Name("\(kfKeyboardStore.activeKeyboard!.name)_\(layer)")))
+                            }
                         }
                     }
                 }
@@ -116,8 +122,7 @@ struct SettingsView: View {
                     TabView {
                         ForEach((kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == kfKeyboardStore.activeKeyboard?.settings.activeLayout}!.layers.sorted(by: {$0.key < $1.key}))!, id: \.key) {
                             layerName, layer in
-//                            KeyboardSettingsView(kfKeyboardStore: kfKeyboardStore, layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!)
-                            KeyboardViewNew(kfKeyboardStore: kfKeyboardStore, kfName2: Shortcut(id: layerName, name: KeyboardShortcuts.Name("\(kfKeyboardStore.activeKeyboard!.name)_\(layerName)")))
+                            LayerSettingsView(kfKeyboardStore: kfKeyboardStore, shortcut: Shortcut(id: layerName, name: KeyboardShortcuts.Name("\(kfKeyboardStore.activeKeyboard!.name)_\(layerName)")), layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!)
                                 .tabItem{Text("Layer \(layerName)")}
                         }
                     }

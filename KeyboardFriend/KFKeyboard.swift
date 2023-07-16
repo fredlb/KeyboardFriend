@@ -72,7 +72,7 @@ class KFKeyboardStore : ObservableObject {
         _ = try await task.value
     }
     
-    func setUpKeyListener(shortcut: Shortcut) {
+    func addShortcut(shortcut: Shortcut) {
         self.shortcuts[shortcut.id] = shortcut
     }
     
