@@ -42,6 +42,12 @@ struct SettingsView: View {
                                 let result = try? await qmkInfoService.generateKFKeyboardFromQMKKeymap(keymap: keymap)
                                 let keyboard = try result?.get()
                                 kfKeyboardStore.activeKeyboard = keyboard
+                                kfKeyboardStore.shortcuts = [:]
+                                
+                                let activeLayout = keyboard?.settings.activeLayout
+                                for layer in keyboard!.drawLayouts.first(where: {$0.name == activeLayout})!.layers.keys {
+                                    kfKeyboardStore.addShortcut(shortcut: Shortcut(id: layer, name: KeyboardShortcuts.Name("\(kfKeyboardStore.activeKeyboard!.uuid)_\(layer)")))
+                                }
                             }
                         } catch {
                             print("Error loading JSON: \(error)")
@@ -61,11 +67,11 @@ struct SettingsView: View {
                         Task {
                             let keeb = try? await kfKeyboardStore.load(fileURL: fileURL)
                             kfKeyboardStore.activeKeyboard = keeb
+                            kfKeyboardStore.shortcuts = [:]
                             
                             let activeLayout = keeb?.settings.activeLayout
                             for layer in keeb!.drawLayouts.first(where: {$0.name == activeLayout})!.layers.keys {
-                                print(layer)
-                                kfKeyboardStore.addShortcut(shortcut: Shortcut(id: layer, name: KeyboardShortcuts.Name("\(kfKeyboardStore.activeKeyboard!.name)_\(layer)")))
+                                kfKeyboardStore.addShortcut(shortcut: Shortcut(id: layer, name: KeyboardShortcuts.Name("\(kfKeyboardStore.activeKeyboard!.uuid)_\(layer)")))
                             }
                         }
                     }
@@ -110,7 +116,7 @@ struct SettingsView: View {
                     TabView {
                         ForEach((kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == kfKeyboardStore.activeKeyboard?.settings.activeLayout}!.layers.sorted(by: {$0.key < $1.key}))!, id: \.key) {
                             layerName, layer in
-                            LayerSettingsView(kfKeyboardStore: kfKeyboardStore, shortcut: Shortcut(id: layerName, name: KeyboardShortcuts.Name("\(kfKeyboardStore.activeKeyboard!.name)_\(layerName)")), layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!)
+                            LayerSettingsView(kfKeyboardStore: kfKeyboardStore, shortcut: kfKeyboardStore.shortcuts[layerName]!, layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!)
                                 .tabItem{Text("Layer \(layerName)")}
                         }
                     }

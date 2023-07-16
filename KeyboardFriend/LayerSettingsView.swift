@@ -22,18 +22,16 @@ struct LayerSettingsView: View {
     let maxWidth: Double
     let maxHeight: Double
     
-    
     var body: some View {
         VStack {
             KeyboardView(maxWidth: maxWidth, maxHeight: maxHeight, layer: layer)
             HStack {
-                KeyboardShortcuts.Recorder(for: self.shortcut.name) { shortcut in
-                    kfKeyboardStore.addShortcut(shortcut: self.shortcut)
+                KeyboardShortcuts.Recorder(for: kfKeyboardStore.shortcuts[layerName]!.name) { shortcut in
+                    kfKeyboardStore.addShortcut(shortcut: Shortcut(id: layerName, name: kfKeyboardStore.shortcuts[layerName]!.name))
                 }
             }
         }
     }
-    
 }
 
 struct LayerSettingsView_Previews: PreviewProvider {

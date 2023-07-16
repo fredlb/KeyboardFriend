@@ -25,7 +25,6 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     }
     
     private func setupListeners(shortcuts: [String:Shortcut]) {
-        print("All kfShortcuts:\(shortcuts)")
         KeyboardShortcuts.removeAllHandlers()
         for shortcut in Array(shortcuts) {
             KeyboardShortcuts.onKeyUp(for: shortcut.value.name) {

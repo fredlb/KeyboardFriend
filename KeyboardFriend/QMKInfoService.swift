@@ -40,7 +40,7 @@ class QMKInfoService: ObservableObject {
                 allDrawLayouts.append(generateDrawConfig(layoutKey: layout, qmkInfo: qmkInfo, keymap: keymap))
             }
             let keyboardName = keymap.keyboard.replacingOccurrences(of: "/", with: "-")
-            return KFKeyboard(name: keyboardName, drawLayouts: allDrawLayouts, settings: KFSettings(activeLayout: layouts.first!, hold: false, hotkeys: [:]))
+            return KFKeyboard(name: keyboardName, uuid: UUID(), drawLayouts: allDrawLayouts, settings: KFSettings(activeLayout: layouts.first!, hold: false, hotkeys: [:]))
         }
         let result = await task.result
         return result

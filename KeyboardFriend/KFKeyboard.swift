@@ -10,6 +10,7 @@ import KeyboardShortcuts
 
 struct KFKeyboard: Decodable, Encodable {
     let name: String
+    let uuid: UUID
     let drawLayouts: [DrawLayout]
     var settings: KFSettings
 }
