@@ -26,10 +26,41 @@ struct Hotkey: Decodable, Encodable, Hashable {
     let keycode: Int
 }
 
+struct InMemoryStorageProvider: StorageProvider {
+    
+    private var storage: [String:KeyboardShortcuts.Shortcut] = [:]
+    
+    mutating func set(_ value: KeyboardShortcuts.Shortcut?, forKey defaultName: String) {
+//        print("DEBUG KFRIEND SET START: \(defaultName)")
+        guard let value = value else {
+            storage.removeValue(forKey: defaultName)
+            return
+        }
+        storage[defaultName] = value
+//        print("DEBUG KFRIEND SET: \(defaultName) : \(value)")
+    }
+
+    mutating func remove(forKey defaultName: String) {
+        storage.removeValue(forKey: defaultName)
+    }
+
+    func get(forKey defaultName: String) -> KeyboardShortcuts.Shortcut? {
+        guard let data = self.storage[defaultName] else {
+            return nil
+        }
+        return data
+    }
+    
+    func getAll() -> [String: KeyboardShortcuts.Shortcut] {
+        return storage
+    }
+}
+
 class KFKeyboardStore : ObservableObject {
     @Published var activeKeyboard: KFKeyboard?
     @Published var showOverlay: Bool = false
-    @Published var shortcuts:[String:Shortcut] = [:]
+    @Published var overlayLayer: String = ""
+    @Published var shortcutStorage: InMemoryStorageProvider = InMemoryStorageProvider()
     
     private static func fileURL(keyboardName: String) throws -> URL {
         try FileManager.default.url(for: .documentDirectory,
@@ -67,15 +98,18 @@ class KFKeyboardStore : ObservableObject {
     
     func saveActiveKeyboard(fileURL: URL) async throws {
         let task = Task {
+            print("save \(self.shortcutStorage.getAll())")
             let data = try JSONEncoder().encode(activeKeyboard!)
             try data.write(to: fileURL)
         }
         _ = try await task.value
     }
     
-    func addShortcut(shortcut: Shortcut) {
-        self.shortcuts[shortcut.id] = shortcut
+    func setupListener(layer: String) {
+        KeyboardShortcuts.onKeyUp(for: KeyboardShortcuts.Name(rawValue: layer)!) { [self] in
+            overlayLayer = layer
+            showOverlay.toggle()
+        }
     }
-    
     
 }
