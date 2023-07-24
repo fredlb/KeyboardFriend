@@ -13,22 +13,25 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     var newEntryPanel: FloatingPanel!
     var qmkInfoService: QMKInfoService = QMKInfoService()
     var kfKeyboardStore: KFKeyboardStore = KFKeyboardStore()
-    var isPanelShowing: Bool = false
+    var currentLayerShowing: String = ""
     
     var overlayChangeSink: AnyCancellable?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        overlayChangeSink = kfKeyboardStore.$showOverlay.sink {
-            if $0 == true {
+        
+        overlayChangeSink = kfKeyboardStore.$overlayState.sink {
+            if $0.layer != self.currentLayerShowing {
+                self.newEntryPanel?.close()
+                self.newEntryPanel = nil
+            }
+            if $0.display == true {
                 let activeLayout = self.kfKeyboardStore.activeKeyboard?.settings.activeLayout
-                self.createFloatingPanel(layer: self.kfKeyboardStore.overlayLayer, drawLayout: (self.kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == activeLayout})!)
+                self.createFloatingPanel(layer: $0.layer, drawLayout: (self.kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == activeLayout})!)
                 self.newEntryPanel.center()
                 self.newEntryPanel.orderFront(nil)
-                self.isPanelShowing = true
             } else {
                 self.newEntryPanel?.close()
                 self.newEntryPanel = nil
-                self.isPanelShowing = false
             }
         }
     }

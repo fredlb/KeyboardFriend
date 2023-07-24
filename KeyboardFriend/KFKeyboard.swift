@@ -28,20 +28,14 @@ struct Hotkey: Decodable, Encodable, Hashable {
 
 struct InMemoryStorageProvider: StorageProvider {
     
-    private var storage: [String:KeyboardShortcuts.Shortcut] = [:]
+    private var storage: [String:KeyboardShortcuts.Shortcut?] = [:]
     
     mutating func set(_ value: KeyboardShortcuts.Shortcut?, forKey defaultName: String) {
-//        print("DEBUG KFRIEND SET START: \(defaultName)")
-        guard let value = value else {
-            storage.removeValue(forKey: defaultName)
-            return
-        }
-        storage[defaultName] = value
-//        print("DEBUG KFRIEND SET: \(defaultName) : \(value)")
+        self.storage.updateValue(value, forKey: defaultName)
     }
 
     mutating func remove(forKey defaultName: String) {
-        storage.removeValue(forKey: defaultName)
+        self.storage.removeValue(forKey: defaultName)
     }
 
     func get(forKey defaultName: String) -> KeyboardShortcuts.Shortcut? {
@@ -51,15 +45,23 @@ struct InMemoryStorageProvider: StorageProvider {
         return data
     }
     
-    func getAll() -> [String: KeyboardShortcuts.Shortcut] {
-        return storage
+    func getAll() -> [String: KeyboardShortcuts.Shortcut?] {
+        return self.storage
     }
+    
+}
+
+struct OverlayState {
+    public var layer: String = ""
+    public var display: Bool = false
 }
 
 class KFKeyboardStore : ObservableObject {
     @Published var activeKeyboard: KFKeyboard?
     @Published var showOverlay: Bool = false
+    @Published var overLayChanged: UUID = UUID()
     @Published var overlayLayer: String = ""
+    @Published var overlayState: OverlayState = OverlayState()
     @Published var shortcutStorage: InMemoryStorageProvider = InMemoryStorageProvider()
     
     private static func fileURL(keyboardName: String) throws -> URL {
@@ -106,9 +108,14 @@ class KFKeyboardStore : ObservableObject {
     }
     
     func setupListener(layer: String) {
-        KeyboardShortcuts.onKeyUp(for: KeyboardShortcuts.Name(rawValue: layer)!) { [self] in
-            overlayLayer = layer
-            showOverlay.toggle()
+        KeyboardShortcuts.onKeyUp(for: KeyboardShortcuts.Name(layer, customStorageProvider: shortcutStorage)) { [self] in
+            print(overlayState.layer, layer)
+            if overlayState.layer == layer {
+                self.overlayState.display.toggle()
+            } else {
+                self.overlayState.layer = layer
+                self.overlayState.display = true
+            }
         }
     }
     
