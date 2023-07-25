@@ -109,7 +109,6 @@ class KFKeyboardStore : ObservableObject {
     
     func setupListener(layer: String) {
         KeyboardShortcuts.onKeyUp(for: KeyboardShortcuts.Name(layer, customStorageProvider: shortcutStorage)) { [self] in
-            print(overlayState.layer, layer)
             if overlayState.layer == layer {
                 self.overlayState.display.toggle()
             } else {

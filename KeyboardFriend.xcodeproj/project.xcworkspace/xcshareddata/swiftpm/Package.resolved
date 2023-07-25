@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "keyboardshortcuts",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fredlb/KeyboardShortcuts",
+      "state" : {
+        "branch" : "storage-provider",
+        "revision" : "2a20783738e23f418a524c9bf344ec759fe69e19"
+      }
+    }
+  ],
+  "version" : 2
+}
