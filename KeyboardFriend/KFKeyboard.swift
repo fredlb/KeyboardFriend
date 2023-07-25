@@ -12,6 +12,7 @@ struct KFKeyboard: Decodable, Encodable {
     let name: String
     let uuid: UUID
     let drawLayouts: [DrawLayout]
+    var shortcuts: [String:KeyboardShortcuts.Shortcut?]
     var settings: KFSettings
 }
 
@@ -26,15 +27,15 @@ struct Hotkey: Decodable, Encodable, Hashable {
     let keycode: Int
 }
 
-struct InMemoryStorageProvider: StorageProvider {
+class InMemoryStorageProvider: StorageProvider {
     
     private var storage: [String:KeyboardShortcuts.Shortcut?] = [:]
     
-    mutating func set(_ value: KeyboardShortcuts.Shortcut?, forKey defaultName: String) {
+    func set(_ value: KeyboardShortcuts.Shortcut?, forKey defaultName: String) {
         self.storage.updateValue(value, forKey: defaultName)
     }
 
-    mutating func remove(forKey defaultName: String) {
+    func remove(forKey defaultName: String) {
         self.storage.removeValue(forKey: defaultName)
     }
 
@@ -46,7 +47,7 @@ struct InMemoryStorageProvider: StorageProvider {
     }
     
     func getAll() -> [String: KeyboardShortcuts.Shortcut?] {
-        return self.storage
+        return storage
     }
     
 }
@@ -87,8 +88,12 @@ class KFKeyboardStore : ObservableObject {
     
     func save(keyboard: KFKeyboard) async throws {
         let task = Task {
-            let data = try JSONEncoder().encode(keyboard)
-            let outfile = try Self.fileURL(keyboardName: keyboard.name)
+            var clonedKeyboard = keyboard
+            for (name, shortcut) in self.shortcutStorage.getAll() {
+                clonedKeyboard.shortcuts.updateValue(shortcut, forKey: name)
+            }
+            let data = try JSONEncoder().encode(clonedKeyboard)
+            let outfile = try Self.fileURL(keyboardName: clonedKeyboard.name)
             try data.write(to: outfile)
         }
         _ = try await task.value
@@ -100,8 +105,11 @@ class KFKeyboardStore : ObservableObject {
     
     func saveActiveKeyboard(fileURL: URL) async throws {
         let task = Task {
-            print("save \(self.shortcutStorage.getAll())")
-            let data = try JSONEncoder().encode(activeKeyboard!)
+            var clonedKeyboard = activeKeyboard
+            for (name, shortcut) in self.shortcutStorage.getAll() {
+                clonedKeyboard!.shortcuts.updateValue(shortcut, forKey: name)
+            }
+            let data = try JSONEncoder().encode(clonedKeyboard!)
             try data.write(to: fileURL)
         }
         _ = try await task.value

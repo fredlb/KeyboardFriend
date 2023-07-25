@@ -57,6 +57,10 @@ struct SettingsView: View {
                         Task {
                             let keeb = try? await kfKeyboardStore.load(fileURL: fileURL)
                             kfKeyboardStore.activeKeyboard = keeb
+                            for (name, shortcut) in keeb!.shortcuts {
+                                kfKeyboardStore.shortcutStorage.set(shortcut, forKey: name)
+                                kfKeyboardStore.setupListener(layer: name)
+                            }
                         }
                     }
                 }
@@ -71,7 +75,6 @@ struct SettingsView: View {
                     
                     savePanel.begin { response in
                         guard response == .OK, let fileURL = savePanel.url else { return }
-                        
                         Task {
                             try? await kfKeyboardStore.saveActiveKeyboard(fileURL: fileURL)
                         }
