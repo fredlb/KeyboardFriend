@@ -32,9 +32,7 @@ class InMemoryStorageProvider: StorageProvider {
     private var storage: [String:String?] = [:]
     
     func set(_ value: String?, forKey defaultName: String) {
-//        print(value)
         self.storage.updateValue(value, forKey: defaultName)
-//        print(storage)
     }
 
     func remove(forKey defaultName: String) {
@@ -42,11 +40,9 @@ class InMemoryStorageProvider: StorageProvider {
     }
 
     func get(forKey defaultName: String) -> String? {
-//        print(defaultName)
         guard let data = self.storage[defaultName] else {
             return nil
         }
-        print(data)
         return data
     }
     
