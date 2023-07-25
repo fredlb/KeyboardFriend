@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		350964812A615B04006DFFFB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350964802A615B04006DFFFB /* Constants.swift */; };
 		350964862A633049006DFFFB /* LayerSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350964852A633049006DFFFB /* LayerSettingsView.swift */; };
-		350964902A6FAC0C006DFFFB /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 3509648F2A6FAC0C006DFFFB /* KeyboardShortcuts */; };
 		3514FA1C2A5E8AF200F9D57C /* KFKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3514FA1B2A5E8AF200F9D57C /* KFKeyboard.swift */; };
 		35ABF4592A6018640026737B /* Keycap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35ABF4582A6018640026737B /* Keycap.swift */; };
 		35B11A452A574F2B00C22C74 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35B11A442A574F2B00C22C74 /* Preview Assets.xcassets */; };
@@ -21,11 +20,14 @@
 		35B11A592A574F7700C22C74 /* KeyboardFriendApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A512A574F7700C22C74 /* KeyboardFriendApp.swift */; };
 		35B11A5A2A574F7700C22C74 /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A522A574F7700C22C74 /* FloatingPanel.swift */; };
 		35B11A5B2A574F7700C22C74 /* QMKInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B11A532A574F7700C22C74 /* QMKInfoService.swift */; };
+		35EB23552A6FFB5100385FA3 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 35EB23542A6FFB5100385FA3 /* KeyboardShortcuts */; };
+		35EB23582A7002FC00385FA3 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 35EB23572A7002FC00385FA3 /* KeyboardShortcuts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		350964802A615B04006DFFFB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		350964852A633049006DFFFB /* LayerSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerSettingsView.swift; sourceTree = "<group>"; };
+		3512D0F52A6FF8C900E9D146 /* KeyboardShortcuts */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = KeyboardShortcuts; path = ../forks/fredlb/KeyboardShortcuts; sourceTree = "<group>"; };
 		3514FA1B2A5E8AF200F9D57C /* KFKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KFKeyboard.swift; sourceTree = "<group>"; };
 		35ABF4582A6018640026737B /* Keycap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keycap.swift; sourceTree = "<group>"; };
 		35B11A3A2A574F2B00C22C74 /* KeyboardFriend.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeyboardFriend.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,7 +49,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				350964902A6FAC0C006DFFFB /* KeyboardShortcuts in Frameworks */,
+				35EB23552A6FFB5100385FA3 /* KeyboardShortcuts in Frameworks */,
+				35EB23582A7002FC00385FA3 /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +60,7 @@
 		3509648B2A6BC731006DFFFB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3512D0F52A6FF8C900E9D146 /* KeyboardShortcuts */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -125,7 +129,8 @@
 			);
 			name = KeyboardFriend;
 			packageProductDependencies = (
-				3509648F2A6FAC0C006DFFFB /* KeyboardShortcuts */,
+				35EB23542A6FFB5100385FA3 /* KeyboardShortcuts */,
+				35EB23572A7002FC00385FA3 /* KeyboardShortcuts */,
 			);
 			productName = KeyboardFriend;
 			productReference = 35B11A3A2A574F2B00C22C74 /* KeyboardFriend.app */;
@@ -156,7 +161,7 @@
 			);
 			mainGroup = 35B11A312A574F2B00C22C74;
 			packageReferences = (
-				3509648E2A6FAC0C006DFFFB /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+				35EB23562A7002FC00385FA3 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
 			productRefGroup = 35B11A3B2A574F2B00C22C74 /* Products */;
 			projectDirPath = "";
@@ -392,7 +397,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3509648E2A6FAC0C006DFFFB /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+		35EB23562A7002FC00385FA3 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/fredlb/KeyboardShortcuts";
 			requirement = {
@@ -403,9 +408,13 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3509648F2A6FAC0C006DFFFB /* KeyboardShortcuts */ = {
+		35EB23542A6FFB5100385FA3 /* KeyboardShortcuts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3509648E2A6FAC0C006DFFFB /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
+		};
+		35EB23572A7002FC00385FA3 /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 35EB23562A7002FC00385FA3 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
 			productName = KeyboardShortcuts;
 		};
 /* End XCSwiftPackageProductDependency section */

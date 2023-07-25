@@ -12,7 +12,7 @@ struct KFKeyboard: Decodable, Encodable {
     let name: String
     let uuid: UUID
     let drawLayouts: [DrawLayout]
-    var shortcuts: [String:KeyboardShortcuts.Shortcut?]
+    var shortcuts: [String:String?]
     var settings: KFSettings
 }
 
@@ -29,24 +29,28 @@ struct Hotkey: Decodable, Encodable, Hashable {
 
 class InMemoryStorageProvider: StorageProvider {
     
-    private var storage: [String:KeyboardShortcuts.Shortcut?] = [:]
+    private var storage: [String:String?] = [:]
     
-    func set(_ value: KeyboardShortcuts.Shortcut?, forKey defaultName: String) {
+    func set(_ value: String?, forKey defaultName: String) {
+//        print(value)
         self.storage.updateValue(value, forKey: defaultName)
+//        print(storage)
     }
 
     func remove(forKey defaultName: String) {
         self.storage.removeValue(forKey: defaultName)
     }
 
-    func get(forKey defaultName: String) -> KeyboardShortcuts.Shortcut? {
+    func get(forKey defaultName: String) -> String? {
+//        print(defaultName)
         guard let data = self.storage[defaultName] else {
             return nil
         }
+        print(data)
         return data
     }
     
-    func getAll() -> [String: KeyboardShortcuts.Shortcut?] {
+    func getAll() -> [String: String?] {
         return storage
     }
     
