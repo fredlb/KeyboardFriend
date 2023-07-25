@@ -14,12 +14,8 @@ struct SettingsView: View {
     @EnvironmentObject var qmkInfoService: QMKInfoService
     @EnvironmentObject var kfKeyboardStore: KFKeyboardStore
     
-    @State var hotkeySetting = [String:Int]()
     @State var layoutSelection: String = ""
-    @State var hotkeySelection: String = ""
     @State private var started: Bool = false
-    private let hotkeys:[String:Int] = ["F13":111, "F14":112, "F15": 113, "F16": 114, "F17": 115]
-    @State var holdHotkey: Bool = false
     
     var body: some View {
         VStack{
@@ -42,12 +38,6 @@ struct SettingsView: View {
                                 let result = try? await qmkInfoService.generateKFKeyboardFromQMKKeymap(keymap: keymap)
                                 let keyboard = try result?.get()
                                 kfKeyboardStore.activeKeyboard = keyboard
-                                kfKeyboardStore.shortcuts = [:]
-                                
-                                let activeLayout = keyboard?.settings.activeLayout
-                                for layer in keyboard!.drawLayouts.first(where: {$0.name == activeLayout})!.layers.keys {
-                                    kfKeyboardStore.addShortcut(shortcut: Shortcut(id: layer, name: KeyboardShortcuts.Name("\(kfKeyboardStore.activeKeyboard!.uuid)_\(layer)")))
-                                }
                             }
                         } catch {
                             print("Error loading JSON: \(error)")
@@ -67,11 +57,9 @@ struct SettingsView: View {
                         Task {
                             let keeb = try? await kfKeyboardStore.load(fileURL: fileURL)
                             kfKeyboardStore.activeKeyboard = keeb
-                            kfKeyboardStore.shortcuts = [:]
-                            
-                            let activeLayout = keeb?.settings.activeLayout
-                            for layer in keeb!.drawLayouts.first(where: {$0.name == activeLayout})!.layers.keys {
-                                kfKeyboardStore.addShortcut(shortcut: Shortcut(id: layer, name: KeyboardShortcuts.Name("\(kfKeyboardStore.activeKeyboard!.uuid)_\(layer)")))
+                            for (name, shortcut) in keeb!.shortcuts {
+                                kfKeyboardStore.shortcutStorage.set(shortcut, forKey: name)
+                                kfKeyboardStore.setupListener(layer: name)
                             }
                         }
                     }
@@ -87,7 +75,6 @@ struct SettingsView: View {
                     
                     savePanel.begin { response in
                         guard response == .OK, let fileURL = savePanel.url else { return }
-                        
                         Task {
                             try? await kfKeyboardStore.saveActiveKeyboard(fileURL: fileURL)
                         }
@@ -116,7 +103,7 @@ struct SettingsView: View {
                     TabView {
                         ForEach((kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == kfKeyboardStore.activeKeyboard?.settings.activeLayout}!.layers.sorted(by: {$0.key < $1.key}))!, id: \.key) {
                             layerName, layer in
-                            LayerSettingsView(kfKeyboardStore: kfKeyboardStore, shortcut: kfKeyboardStore.shortcuts[layerName]!, layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!)
+                            LayerSettingsView(kfKeyboardStore: kfKeyboardStore, layer: layer, layerName: layerName, maxWidth: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardWidth)!, maxHeight: (kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == layoutSelection}!.keyboardHeigt)!)
                                 .tabItem{Text("Layer \(layerName)")}
                         }
                     }
@@ -130,29 +117,6 @@ struct SettingsView: View {
     }
     
 }
-
-public extension View {
-    func onFirstAppear(_ action: @escaping () -> ()) -> some View {
-        modifier(FirstAppear(action: action))
-    }
-}
-
-private struct FirstAppear: ViewModifier {
-    let action: () -> ()
-    
-    // Use this to only fire your block one time
-    @State private var hasAppeared = false
-    
-    func body(content: Content) -> some View {
-        // And then, track it here
-        content.onAppear {
-            guard !hasAppeared else { return }
-            hasAppeared = true
-            action()
-        }
-    }
-}
-
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {

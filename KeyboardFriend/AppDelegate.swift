@@ -13,33 +13,25 @@ class AppDelegate:NSObject, NSApplicationDelegate {
     var newEntryPanel: FloatingPanel!
     var qmkInfoService: QMKInfoService = QMKInfoService()
     var kfKeyboardStore: KFKeyboardStore = KFKeyboardStore()
-    var isPanelShowing: Bool = false
+    var currentLayerShowing: String = ""
     
-    var changeSink: AnyCancellable?
+    var overlayChangeSink: AnyCancellable?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        changeSink = kfKeyboardStore.$shortcuts.sink {
-            self.setupListeners(shortcuts: $0)
-        }
         
-    }
-    
-    private func setupListeners(shortcuts: [String:Shortcut]) {
-        KeyboardShortcuts.removeAllHandlers()
-        for shortcut in Array(shortcuts) {
-            KeyboardShortcuts.onKeyUp(for: shortcut.value.name) {
-                print("keyUp on \(shortcut.value.id)")
-                if !self.isPanelShowing {
-                    let activeLayout = self.kfKeyboardStore.activeKeyboard?.settings.activeLayout
-                    self.createFloatingPanel(layer: shortcut.key, drawLayout: (self.kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == activeLayout})!)
-                    self.newEntryPanel.center()
-                    self.newEntryPanel.orderFront(nil)
-                    self.isPanelShowing = true
-                } else {
-                    self.newEntryPanel?.close()
-                    self.newEntryPanel = nil
-                    self.isPanelShowing = false
-                }
+        overlayChangeSink = kfKeyboardStore.$overlayState.sink {
+            if $0.layer != self.currentLayerShowing {
+                self.newEntryPanel?.close()
+                self.newEntryPanel = nil
+            }
+            if $0.display == true {
+                let activeLayout = self.kfKeyboardStore.activeKeyboard?.settings.activeLayout
+                self.createFloatingPanel(layer: $0.layer, drawLayout: (self.kfKeyboardStore.activeKeyboard?.drawLayouts.first {$0.name == activeLayout})!)
+                self.newEntryPanel.center()
+                self.newEntryPanel.orderFront(nil)
+            } else {
+                self.newEntryPanel?.close()
+                self.newEntryPanel = nil
             }
         }
     }

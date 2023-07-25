@@ -12,6 +12,7 @@ struct KFKeyboard: Decodable, Encodable {
     let name: String
     let uuid: UUID
     let drawLayouts: [DrawLayout]
+    var shortcuts: [String:String?]
     var settings: KFSettings
 }
 
@@ -26,10 +27,47 @@ struct Hotkey: Decodable, Encodable, Hashable {
     let keycode: Int
 }
 
+class InMemoryStorageProvider: StorageProvider {
+    
+    private var storage: [String:String?] = [:]
+    
+    func set(_ value: String?, forKey defaultName: String) {
+//        print(value)
+        self.storage.updateValue(value, forKey: defaultName)
+//        print(storage)
+    }
+
+    func remove(forKey defaultName: String) {
+        self.storage.removeValue(forKey: defaultName)
+    }
+
+    func get(forKey defaultName: String) -> String? {
+//        print(defaultName)
+        guard let data = self.storage[defaultName] else {
+            return nil
+        }
+        print(data)
+        return data
+    }
+    
+    func getAll() -> [String: String?] {
+        return storage
+    }
+    
+}
+
+struct OverlayState {
+    public var layer: String = ""
+    public var display: Bool = false
+}
+
 class KFKeyboardStore : ObservableObject {
     @Published var activeKeyboard: KFKeyboard?
     @Published var showOverlay: Bool = false
-    @Published var shortcuts:[String:Shortcut] = [:]
+    @Published var overLayChanged: UUID = UUID()
+    @Published var overlayLayer: String = ""
+    @Published var overlayState: OverlayState = OverlayState()
+    @Published var shortcutStorage: InMemoryStorageProvider = InMemoryStorageProvider()
     
     private static func fileURL(keyboardName: String) throws -> URL {
         try FileManager.default.url(for: .documentDirectory,
@@ -54,8 +92,12 @@ class KFKeyboardStore : ObservableObject {
     
     func save(keyboard: KFKeyboard) async throws {
         let task = Task {
-            let data = try JSONEncoder().encode(keyboard)
-            let outfile = try Self.fileURL(keyboardName: keyboard.name)
+            var clonedKeyboard = keyboard
+            for (name, shortcut) in self.shortcutStorage.getAll() {
+                clonedKeyboard.shortcuts.updateValue(shortcut, forKey: name)
+            }
+            let data = try JSONEncoder().encode(clonedKeyboard)
+            let outfile = try Self.fileURL(keyboardName: clonedKeyboard.name)
             try data.write(to: outfile)
         }
         _ = try await task.value
@@ -67,15 +109,25 @@ class KFKeyboardStore : ObservableObject {
     
     func saveActiveKeyboard(fileURL: URL) async throws {
         let task = Task {
-            let data = try JSONEncoder().encode(activeKeyboard!)
+            var clonedKeyboard = activeKeyboard
+            for (name, shortcut) in self.shortcutStorage.getAll() {
+                clonedKeyboard!.shortcuts.updateValue(shortcut, forKey: name)
+            }
+            let data = try JSONEncoder().encode(clonedKeyboard!)
             try data.write(to: fileURL)
         }
         _ = try await task.value
     }
     
-    func addShortcut(shortcut: Shortcut) {
-        self.shortcuts[shortcut.id] = shortcut
+    func setupListener(layer: String) {
+        KeyboardShortcuts.onKeyUp(for: KeyboardShortcuts.Name(layer, customStorageProvider: shortcutStorage)) { [self] in
+            if overlayState.layer == layer {
+                self.overlayState.display.toggle()
+            } else {
+                self.overlayState.layer = layer
+                self.overlayState.display = true
+            }
+        }
     }
-    
     
 }
